@@ -2,10 +2,18 @@ package com.kappdev.moodtracker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+/* Light colors palette */
+val Alabaster = Color(0xFFF8F4F0)    // 60
+val CottonSeed = Color(0xFFF2E4D4)   // 30
+val Salmon = Color(0xFFF3966D)       // 10
+val GrayOlive = Color(0xFF968D83)    // on background
+val EclipseBlack = Color(0xFF262321) // on surface
+val ErrorRed = Color(0xFFB00020)     // error
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+/* Dark colors palette */
+val BlackOlive = Color(0xFF1F160F)     // 60
+val SealBrown = Color(0xFF4A3325)      // 30
+val AsparagusGreen = Color(0xFF93A364) // 10
+val PaleTaupe = Color(0xFFCEBDB3)      // on background
+val LinenWhite = Color(0xFFFCFEFD)     // on surface
+val MutedErrorRed = Color(0xFFB85656)  // error
