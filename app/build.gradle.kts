@@ -33,6 +33,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -94,6 +95,9 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+
+    /* Local Date and Time support */
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     /* Data store */
     implementation("androidx.datastore:datastore-preferences:1.0.0")
