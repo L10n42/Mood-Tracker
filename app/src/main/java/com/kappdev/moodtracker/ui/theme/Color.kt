@@ -2,6 +2,13 @@ package com.kappdev.moodtracker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+/* Mood colors */
+val AwfulColor = Color(0xFFBD4B3B)
+val BadColor = Color(0xFFC77931)
+val GoodColor = Color(0xFFBFC13A)
+val MehColor = Color(0xFFFFC7A8)
+val RadColor = Color(0xFF44924C)
+
 /* Light colors palette */
 val Alabaster = Color(0xFFF8F4F0)    // 60
 val CottonSeed = Color(0xFFF2E4D4)   // 30

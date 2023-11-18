@@ -6,14 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.kappdev.moodtracker.presentation.navigation.SetupNavGraph
 import com.kappdev.moodtracker.ui.theme.MoodTrackerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MoodTrackerTheme {
+            MoodTrackerTheme(darkTheme = false) {
                 val navController = rememberNavController()
-
                 SetupNavGraph(navController)
             }
         }

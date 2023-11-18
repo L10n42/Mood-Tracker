@@ -1,0 +1,20 @@
+package com.kappdev.moodtracker.domain.use_case
+
+import com.kappdev.moodtracker.domain.model.Mood
+import com.kappdev.moodtracker.domain.repository.MoodRepository
+import com.kappdev.moodtracker.domain.util.fail
+import javax.inject.Inject
+
+class InsertMood @Inject constructor(
+    private val repository: MoodRepository
+) {
+
+    suspend operator fun invoke(mode: Mood): Result<Long> {
+        val result = repository.insertMood(mode)
+        return if (result > 0) {
+            Result.success(result)
+        } else {
+            Result.fail("Insert error")
+        }
+    }
+}

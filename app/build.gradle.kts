@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.kappdev.moodtracker"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.kappdev.moodtracker"
@@ -19,6 +19,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/db_schemas")
+            }
         }
     }
 
@@ -104,6 +109,9 @@ dependencies {
 
     /* JSON convertor */
     implementation("com.google.code.gson:gson:2.10.1")
+
+    /* Animation Lottie */
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
 
     /* Default tests */
     testImplementation("junit:junit:4.13.2")
