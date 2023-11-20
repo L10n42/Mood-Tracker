@@ -1,15 +1,20 @@
 package com.kappdev.moodtracker.presentation.mood_chart.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,22 +37,17 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.kappdev.moodtracker.domain.model.MoodType
 
-val DebugItems = mapOf(
-    "Mon" to MoodType.Rad,
-    "Tue" to MoodType.Good,
-    "Wed" to MoodType.Meh,
-    "Thu" to MoodType.Meh,
-    "Fri" to MoodType.Bad,
-    "Sat" to MoodType.Rad,
-    "Sun" to MoodType.Awful
-)
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MoodChart(
+    data: Map<Int, MoodType?>,
     modifier: Modifier = Modifier
 ) {
+    val listState = rememberLazyListState()
+    val snapBehavior = rememberSnapFlingBehavior(lazyListState = listState)
 
-    Row(
+    LazyRow(
+        state = listState,
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surface,
@@ -59,15 +58,16 @@ fun MoodChart(
                 labelHeight = LabelHeight,
                 color = MaterialTheme.colorScheme.onBackground
             ),
+        flingBehavior = snapBehavior,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        DebugItems.forEach { entry ->
+        items(data.toList()) { (dayOfMonth, mood) ->
             ChartBar(
-                label = entry.key,
-                mood = entry.value,
+                label = dayOfMonth.toString(),
+                mood = mood,
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f)
+                    .width(32.dp)
             )
         }
     }
@@ -76,7 +76,7 @@ fun MoodChart(
 @Composable
 private fun ChartBar(
     label: String,
-    mood: MoodType,
+    mood: MoodType?,
     modifier: Modifier = Modifier
 ) {
     var heightTarget by remember { mutableFloatStateOf(0f) }
@@ -87,31 +87,34 @@ private fun ChartBar(
     )
 
     LaunchedEffect(mood) {
-        heightTarget = mood.getHeightFraction()
+        heightTarget = mood?.getHeightFraction() ?: 0f
     }
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.BottomCenter
     ) {
-        Box(
-            modifier = Modifier
-                .padding(bottom = LabelHeight)
-                .fillMaxWidth()
-                .fillMaxHeight(animatedHeight)
-                .background(mood.color.copy(0.8f), CircleShape)
-        ) {
-            val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(mood.animationRes))
-
-            LottieAnimation(
-                composition = lottieComposition,
-                iterations = LottieConstants.IterateForever,
-                isPlaying = true,
+        mood?.let {
+            Box(
                 modifier = Modifier
+                    .padding(bottom = LabelHeight)
                     .fillMaxWidth()
-                    .aspectRatio(1f)
-            )
+                    .fillMaxHeight(animatedHeight)
+                    .background(mood.color.copy(0.8f), CircleShape)
+            ) {
+                val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(mood.animationRes))
+
+                LottieAnimation(
+                    composition = lottieComposition,
+                    iterations = LottieConstants.IterateForever,
+                    isPlaying = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+            }
         }
+
         BarLabel(
             text = label,
             modifier = Modifier
