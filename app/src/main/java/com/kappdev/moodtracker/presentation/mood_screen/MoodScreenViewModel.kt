@@ -12,6 +12,7 @@ import com.kappdev.moodtracker.domain.use_case.InsertMood
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -85,8 +86,8 @@ class MoodScreenViewModel @Inject constructor(
     private fun CoroutineScope.launchLoading(
         context: CoroutineContext = EmptyCoroutineContext,
         block: suspend CoroutineScope.() -> Unit
-    ) {
-        viewModelScope.launch(context) {
+    ): Job {
+        return this.launch(context) {
             this@MoodScreenViewModel.isLoading = true
             block()
             this@MoodScreenViewModel.isLoading = false

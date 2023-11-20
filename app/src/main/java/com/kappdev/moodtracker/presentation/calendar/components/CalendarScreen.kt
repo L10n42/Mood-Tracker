@@ -1,5 +1,6 @@
 package com.kappdev.moodtracker.presentation.calendar.components
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +26,7 @@ import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.presentation.calendar.CalendarViewModel
 import com.kappdev.moodtracker.presentation.common.components.ActionButton
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
+import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
 import com.kappdev.moodtracker.presentation.navigation.NavConst
 import com.kappdev.moodtracker.presentation.navigation.Screen
 import com.kappdev.moodtracker.presentation.navigation.navigateWithValue
@@ -61,19 +62,9 @@ fun CalendarScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MoodCalendar(
-                weekDays = stringArrayResource(R.array.week_days),
-                calendarData = viewModel.data,
-                calendarDate = viewModel.calendarDate,
-                streaks = viewModel.moodStreaks,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(16.dp),
+            CalendarView(
+                viewModel = viewModel,
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 onDateClick = { date ->
                     navController.navigateWithValue(
                         route = Screen.Mood.route,
@@ -101,7 +92,9 @@ fun CalendarScreen(
                 title = stringResource(R.string.btn_mood_chart),
                 icon = Icons.Rounded.BarChart,
                 modifier = actionButtonModifier,
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate(Screen.MoodChart.route)
+                }
             )
 
             ActionButton(

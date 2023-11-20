@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,22 +25,24 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodStreak
 import com.kappdev.moodtracker.domain.util.getMonthName
+import com.kappdev.moodtracker.domain.util.isNextMonthAfter
 import com.kappdev.moodtracker.domain.util.isToday
 import com.kappdev.moodtracker.domain.util.sameMonthWith
 import java.time.LocalDate
 
 @Composable
 fun MoodCalendar(
-    weekDays: Array<String>,
     calendarData: Map<LocalDate, Mood?>,
     streaks: List<MoodStreak>,
     calendarDate: LocalDate,
     modifier: Modifier = Modifier,
     onDateClick: (date: LocalDate) -> Unit
 ) {
+    val weekDays = stringArrayResource(R.array.week_days)
     CalendarLayout(
         modifier = modifier,
         itemsPadding = 4.dp,
@@ -76,15 +79,25 @@ private fun DateView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        val mood = entry.value
-        if (mood != null) {
-            LottieAnimationView(mood = mood, onClick = onClick)
-        } else {
-            EmptyDateView(onClick = onClick)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(CircleShape)
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center
+        ) {
+            val mood = entry.value
+
+            if (mood != null) {
+                LottieAnimationView(mood = mood)
+            } else {
+                EmptyDateView()
+            }
         }
 
         Text(
-            text = getDateStringOf(entry.key, calendarDate),
+            text = getCalendarDateStringOf(entry.key, calendarDate),
             fontSize = 12.sp,
             color = textColor,
             fontWeight = if (entry.key.isToday()) FontWeight.SemiBold else FontWeight.Normal
@@ -94,8 +107,7 @@ private fun DateView(
 
 @Composable
 private fun LottieAnimationView(
-    mood: Mood,
-    onClick: () -> Unit
+    mood: Mood
 ) {
     val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(mood.type.animationRes))
 
@@ -107,15 +119,11 @@ private fun LottieAnimationView(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
-            .clip(CircleShape)
-            .clickable(onClick = onClick)
     )
 }
 
 @Composable
-private fun EmptyDateView(
-    onClick: () -> Unit
-) {
+private fun EmptyDateView() {
     Box(
         modifier = Modifier
             .fillMaxWidth(0.7f)
@@ -124,23 +132,7 @@ private fun EmptyDateView(
                 color = MaterialTheme.colorScheme.onBackground,
                 shape = CircleShape
             )
-            .clip(CircleShape)
-            .clickable(onClick = onClick)
     )
-}
-
-private fun getDateStringOf(date: LocalDate, calendarDate: LocalDate): String {
-    val isNextMonth = date.isNextMonthAfter(calendarDate)
-    val isFirstDay = (date.dayOfMonth == 1)
-    return if (isNextMonth && isFirstDay) {
-        date.getMonthName(short = true)
-    } else {
-        date.dayOfMonth.toString()
-    }
-}
-
-private fun LocalDate.isNextMonthAfter(date: LocalDate): Boolean {
-    return (this.year == date.year && this.month == date.month + 1)
 }
 
 @Composable

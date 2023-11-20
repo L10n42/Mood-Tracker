@@ -10,9 +10,11 @@ import com.kappdev.moodtracker.domain.model.MoodStreak
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.FindMoodStreaks
 import com.kappdev.moodtracker.domain.use_case.GetCalendarData
+import com.kappdev.moodtracker.domain.use_case.GetCalendarMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -23,7 +25,13 @@ class CalendarViewModel @Inject constructor(
     private val getCalendarData: GetCalendarData
 ) : ViewModel() {
 
+    var calendarState by mutableStateOf(CalendarState.IDLE)
+        private set
+
     var calendarDate by mutableStateOf<LocalDate>(LocalDate.now())
+        private set
+
+    var calendarMonth by mutableStateOf(GetCalendarMonth().invoke(calendarDate))
         private set
 
     var data by mutableStateOf<Map<LocalDate, Mood?>>(emptyMap())
@@ -40,15 +48,23 @@ class CalendarViewModel @Inject constructor(
 
     fun changeCalendarDate(date: LocalDate) {
         calendarDate = date
+        updateCalendarMonth()
         updateCalendarData()
     }
 
     private fun updateCalendarData() {
         calendarJob?.cancel()
         calendarJob = viewModelScope.launch(Dispatchers.IO) {
-            data = getCalendarData(calendarDate)
+            calendarState = CalendarState.LOADING
+            data = getCalendarData(calendarMonth)
             findMoodStreaks()
+            delay(5000)
+            calendarState = CalendarState.READY
         }
+    }
+
+    private fun updateCalendarMonth() {
+        calendarMonth = GetCalendarMonth().invoke(calendarDate)
     }
 
     private fun findMoodStreaks() {

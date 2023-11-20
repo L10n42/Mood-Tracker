@@ -1,6 +1,6 @@
 package com.kappdev.moodtracker.domain.use_case
 
-import android.util.Log
+import com.kappdev.moodtracker.domain.model.CalendarMonth
 import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.end
 import com.kappdev.moodtracker.domain.model.start
@@ -12,20 +12,16 @@ class GetCalendarData @Inject constructor(
     private val repository: MoodRepository
 ) {
 
-    operator fun invoke(date: LocalDate): Map<LocalDate, Mood?> {
-        val calendarMonth = GetCalendarMonth().invoke(date)
-        val calendarMoods = repository.getMoodsFor(calendarMonth.start, calendarMonth.end)
+    operator fun invoke(month: CalendarMonth): Map<LocalDate, Mood?> {
+        val calendarMoods = repository.getMoodsFor(month.start, month.end)
 
-        val calendarData = calendarMonth.days.associateWith<LocalDate, Mood?> { null }.toMutableMap()
+        val calendarData = month.days.associateWith<LocalDate, Mood?> { null }.toMutableMap()
 
-        for (calendarDay in calendarMonth.days) {
+        for (calendarDay in month.days) {
             val dataForDate = calendarMoods.firstOrNull { it.date == calendarDay }
             calendarData[calendarDay] = dataForDate
         }
 
-        calendarData.forEach {
-            Log.d("CALENDARDATA", "${it.key} -> ${it.value}")
-        }
         return calendarData
     }
 }

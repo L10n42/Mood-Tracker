@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import com.kappdev.moodtracker.domain.util.getMonthName
+import com.kappdev.moodtracker.domain.util.isCurrentYear
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,15 +29,17 @@ fun MoodTopBar(
             containerColor = MaterialTheme.colorScheme.background
         ),
         title = {
-            Text(
-                text = date?.toString() ?: "",
-                maxLines = 1,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.SemiBold,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            date?.let {
+                Text(
+                    text = styleDate(date),
+                    maxLines = 1,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.SemiBold,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
         },
         navigationIcon = {
             IconButton(onClick = onBack) {
@@ -46,4 +50,17 @@ fun MoodTopBar(
             }
         }
     )
+}
+
+private fun styleDate(date: LocalDate): String {
+    return buildString {
+        append(date.getMonthName())
+        append(" ")
+        append(date.dayOfMonth)
+
+        if (!date.isCurrentYear()) {
+            append(", ")
+            append(date.year)
+        }
+    }
 }

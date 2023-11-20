@@ -12,11 +12,14 @@ fun LocalDate.isToday(): Boolean {
     return (this == LocalDate.now())
 }
 
+fun LocalDate.isNextMonthAfter(date: LocalDate): Boolean {
+    return (this.year == date.year && this.month == date.month + 1)
+}
+
 fun LocalDate.sameMonthWith(date: LocalDate): Boolean {
     return (this.month == date.month && this.year == date.year)
 }
 
-fun LocalDate.isCurrentMonth(): Boolean {
-    val now = LocalDate.now()
-    return (this.month == now.month && this.year == now.year)
+fun LocalDate.isCurrentYear(): Boolean {
+    return (this.year == LocalDate.now().year)
 }

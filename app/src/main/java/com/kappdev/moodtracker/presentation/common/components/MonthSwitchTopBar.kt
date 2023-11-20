@@ -1,4 +1,4 @@
-package com.kappdev.moodtracker.presentation.calendar.components
+package com.kappdev.moodtracker.presentation.common.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -39,7 +39,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.domain.util.getMonthName
-import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import java.time.LocalDate
 
 @Composable

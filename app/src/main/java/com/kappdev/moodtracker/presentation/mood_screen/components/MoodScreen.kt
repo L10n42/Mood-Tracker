@@ -56,7 +56,7 @@ fun MoodScreen(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             DoneButton {
-                viewModel.saveMood { navController.navigate(Screen.Calendar.route) }
+                viewModel.saveMood { navController.popBackStack() }
             }
         }
     ) { padValues ->
