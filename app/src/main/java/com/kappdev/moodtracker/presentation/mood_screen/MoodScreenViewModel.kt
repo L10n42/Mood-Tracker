@@ -9,6 +9,8 @@ import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.GetMoodByDate
 import com.kappdev.moodtracker.domain.use_case.InsertMood
+import com.kappdev.moodtracker.domain.util.Toaster
+import com.kappdev.moodtracker.domain.util.messageOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +25,8 @@ import kotlin.coroutines.EmptyCoroutineContext
 @HiltViewModel
 class MoodScreenViewModel @Inject constructor(
     private val insertMood: InsertMood,
-    private val getMoodByDate: GetMoodByDate
+    private val getMoodByDate: GetMoodByDate,
+    private val toaster: Toaster
 ) : ViewModel() {
 
     var date by mutableStateOf<LocalDate?>(null)
@@ -32,7 +35,7 @@ class MoodScreenViewModel @Inject constructor(
     var isLoading by mutableStateOf(false)
         private set
 
-    var selectedMood by mutableStateOf<MoodType>(MoodType.Good)
+    var selectedMood by mutableStateOf<MoodType?>(null)
         private set
 
     var note by mutableStateOf("")
@@ -40,9 +43,13 @@ class MoodScreenViewModel @Inject constructor(
 
     fun saveMood(onSuccess: () -> Unit) {
         viewModelScope.launchLoading(Dispatchers.IO) {
-            val result = insertMood(packMood())
-            if (result.isSuccess) {
-                withContext(Dispatchers.Main) { onSuccess() }
+            val result = insertMood(date, selectedMood, note)
+
+            withContext(Dispatchers.Main) {
+                when {
+                    result.isSuccess -> onSuccess()
+                    result.isFailure -> result.messageOrNull()?.let(toaster::show)
+                }
             }
         }
     }
@@ -50,10 +57,9 @@ class MoodScreenViewModel @Inject constructor(
     fun getMoodData(onFailure: () -> Unit) {
         viewModelScope.launchLoading(Dispatchers.IO) {
             val mood = date?.let { getMoodByDate(it) }
-            if (date != null && mood != null) {
-                unpackMood(mood)
-            } else if (date == null) {
-                withContext(Dispatchers.Main) { onFailure() }
+            when {
+                (date != null && mood != null) -> unpackMood(mood)
+                (date == null) -> withContext(Dispatchers.Main) { onFailure() }
             }
         }
     }
@@ -61,14 +67,6 @@ class MoodScreenViewModel @Inject constructor(
     private fun unpackMood(mood: Mood) {
         note = mood.note
         selectedMood = mood.type
-    }
-
-    private fun packMood(): Mood {
-        return Mood(
-            note = note,
-            type = selectedMood,
-            date = date!!
-        )
     }
 
     fun selectMood(type: MoodType) {

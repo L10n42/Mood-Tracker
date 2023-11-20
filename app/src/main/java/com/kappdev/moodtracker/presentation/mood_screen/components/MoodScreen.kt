@@ -24,7 +24,6 @@ import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
 import com.kappdev.moodtracker.presentation.mood_screen.MoodScreenViewModel
-import com.kappdev.moodtracker.presentation.navigation.Screen
 import java.time.LocalDate
 
 @Composable

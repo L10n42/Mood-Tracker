@@ -30,7 +30,7 @@ import com.kappdev.moodtracker.domain.model.values
 
 @Composable
 fun MoodPicker(
-    selected: MoodType,
+    selected: MoodType?,
     onSelect: (new: MoodType) -> Unit
 ) {
     Row(
@@ -40,7 +40,7 @@ fun MoodPicker(
         MoodType.values.forEach { moodType ->
             MoodButton(
                 type = moodType,
-                selected = (moodType.key == selected.key),
+                selected = (moodType.key == selected?.key),
                 onClick = {
                     onSelect(moodType)
                 }
