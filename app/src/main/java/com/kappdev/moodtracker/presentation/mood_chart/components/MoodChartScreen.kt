@@ -23,6 +23,8 @@ import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.presentation.common.components.ActionButton
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
+import com.kappdev.moodtracker.presentation.common.components.WeekSwitchTopBar
+import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 import com.kappdev.moodtracker.presentation.mood_chart.MoodChartScreenViewModel
 import com.kappdev.moodtracker.presentation.navigation.NavConst
 import com.kappdev.moodtracker.presentation.navigation.Screen
@@ -45,10 +47,16 @@ fun MoodChartScreen(
             DividedContent(
                 isDividerVisible = scrollState.canScrollBackward
             ) {
-                MonthSwitchTopBar(
-                    date = viewModel.currentDate,
-                    onDateChange = viewModel::changeCurrentDate
-                )
+                when (viewModel.chartType) {
+                    ChartType.MONTH -> MonthSwitchTopBar(
+                        date = viewModel.currentDate,
+                        onDateChange = viewModel::changeCurrentDate
+                    )
+                    ChartType.WEEK -> WeekSwitchTopBar(
+                        date = viewModel.currentDate,
+                        onDateChange = viewModel::changeCurrentDate
+                    )
+                }
             }
         }
     ) { padValues ->
@@ -61,6 +69,7 @@ fun MoodChartScreen(
         ) {
             MoodChart(
                 data = viewModel.data,
+                chartType = viewModel.chartType,
                 modifier = Modifier
                     .height(280.dp)
                     .fillMaxWidth()

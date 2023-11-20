@@ -18,8 +18,7 @@ class GetCalendarData @Inject constructor(
         val calendarData = month.days.associateWith<LocalDate, Mood?> { null }.toMutableMap()
 
         for (calendarDay in month.days) {
-            val dataForDate = calendarMoods.firstOrNull { it.date == calendarDay }
-            calendarData[calendarDay] = dataForDate
+            calendarData[calendarDay] =calendarMoods.firstOrNull { it.date == calendarDay }
         }
 
         return calendarData

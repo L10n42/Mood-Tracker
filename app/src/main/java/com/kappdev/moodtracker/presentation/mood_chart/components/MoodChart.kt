@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,14 +36,18 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.model.MoodType
+import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MoodChart(
     data: Map<Int, MoodType?>,
+    chartType: ChartType,
     modifier: Modifier = Modifier
 ) {
+    val weekDays = stringArrayResource(R.array.week_days)
     val listState = rememberLazyListState()
     val snapBehavior = rememberSnapFlingBehavior(lazyListState = listState)
 
@@ -61,10 +66,14 @@ fun MoodChart(
         flingBehavior = snapBehavior,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(data.toList()) { (dayOfMonth, mood) ->
+        items(data.toList()) { (day, mood) ->
+            val label = when (chartType) {
+                ChartType.MONTH -> day.toString()
+                ChartType.WEEK -> weekDays[day - 1]
+            }
             ChartBar(
-                label = dayOfMonth.toString(),
                 mood = mood,
+                label = label,
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(32.dp)

@@ -39,12 +39,69 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.domain.util.getMonthName
+import com.kappdev.moodtracker.domain.util.isCurrentYear
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
+
+@Composable
+fun WeekSwitchTopBar(
+    date: LocalDate,
+    onDateChange: (newDate: LocalDate) -> Unit
+) {
+    BasicSwitchTopBar(
+        titleTransform = {
+            val firstDay = it.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            val lastDay = it.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+            "${getWeekTitleOf(firstDay)} - ${getWeekTitleOf(lastDay)}"
+        },
+        date = date,
+        onBack = {
+            onDateChange(date.minusWeek())
+        },
+        onNext = {
+            onDateChange(date.plusWeek())
+        }
+    )
+}
+
+private fun getWeekTitleOf(date: LocalDate): String {
+    return buildString {
+        append(date.getMonthName(!date.isCurrentYear()))
+        append(" ")
+        append(date.dayOfMonth)
+        if (!date.isCurrentYear()) {
+            append(", ")
+            append(date.year)
+        }
+    }
+}
 
 @Composable
 fun MonthSwitchTopBar(
     date: LocalDate,
     onDateChange: (newDate: LocalDate) -> Unit
+) {
+    BasicSwitchTopBar(
+        date = date,
+        titleTransform = {
+            "${it.getMonthName()} ${it.year}"
+        },
+        onBack = {
+            onDateChange(date.minusMonth())
+        },
+        onNext = {
+            onDateChange(date.plusMonth())
+        }
+    )
+}
+
+@Composable
+private fun BasicSwitchTopBar(
+    date: LocalDate,
+    titleTransform: (date: LocalDate) -> String,
+    onBack: () -> Unit,
+    onNext: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -56,22 +113,19 @@ fun MonthSwitchTopBar(
     ) {
         SwitchButton(
             icon = Icons.Rounded.ArrowBackIos,
-            onClick = {
-                onDateChange(date.minusMonth())
-            }
+            onClick = onBack
         )
 
         AnimatedDateTitle(
             date = date,
+            titleTransform = titleTransform,
             modifier = Modifier.weight(1f)
         )
 
         SwitchButton(
             icon = Icons.Rounded.ArrowForwardIos,
             enabled = date.nextMonthEnabled(),
-            onClick = {
-                onDateChange(date.plusMonth())
-            }
+            onClick = onNext
         )
     }
 }
@@ -112,6 +166,7 @@ private fun SwitchButton(
 @Composable
 private fun AnimatedDateTitle(
     date: LocalDate,
+    titleTransform: (date: LocalDate) -> String,
     modifier: Modifier = Modifier,
     duration: Int = 700
 ) {
@@ -141,17 +196,17 @@ private fun AnimatedDateTitle(
                 )
         },
         label = "Animated date title"
-    ) { animatedDate ->
-        DateTitle(animatedDate)
+    ) {
+        DateTitle(titleTransform(it))
     }
 }
 
 @Composable
 private fun DateTitle(
-    date: LocalDate
+    title: String
 ) {
     Text(
-        text = "${date.getMonthName()} ${date.year}",
+        text = title,
         maxLines = 1,
         fontSize = 18.sp,
         textAlign = TextAlign.Center,
@@ -163,3 +218,6 @@ private fun DateTitle(
 
 private fun LocalDate.plusMonth() = this.plusMonths(1)
 private fun LocalDate.minusMonth() = this.minusMonths(1)
+
+private fun LocalDate.plusWeek() = this.plusWeeks(1)
+private fun LocalDate.minusWeek() = this.minusWeeks(1)

@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.GetMonthChartData
+import com.kappdev.moodtracker.domain.use_case.GetWeekChartData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,8 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoodChartScreenViewModel @Inject constructor(
-    private val getMonthChartData: GetMonthChartData
+    private val getMonthChartData: GetMonthChartData,
+    private val getWeekChartData: GetWeekChartData
 ) : ViewModel() {
+
+    var chartType by mutableStateOf(ChartType.WEEK)
+        private set
 
     var currentDate by mutableStateOf<LocalDate>(LocalDate.now())
         private set
@@ -40,8 +44,14 @@ class MoodChartScreenViewModel @Inject constructor(
     private fun updateChartData() {
         chartDataJob?.cancel()
         chartDataJob = viewModelScope.launch(Dispatchers.IO) {
-            data = getMonthChartData(currentDate)
+            data = when (chartType) {
+                ChartType.MONTH -> getMonthChartData(currentDate)
+                ChartType.WEEK -> getWeekChartData(currentDate)
+            }
         }
     }
 
+    fun changeChartType(newType: ChartType) {
+        chartType = newType
+    }
 }
