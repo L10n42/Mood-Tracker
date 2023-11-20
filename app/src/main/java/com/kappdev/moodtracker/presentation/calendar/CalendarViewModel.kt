@@ -14,7 +14,6 @@ import com.kappdev.moodtracker.domain.use_case.GetCalendarMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -58,7 +57,6 @@ class CalendarViewModel @Inject constructor(
             calendarState = CalendarState.LOADING
             data = getCalendarData(calendarMonth)
             findMoodStreaks()
-            delay(5000)
             calendarState = CalendarState.READY
         }
     }

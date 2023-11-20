@@ -4,6 +4,7 @@
     <string name="quick_note_title">Quick note</string>
     <string name="btn_today_mood">How do you feel today?</string>
     <string name="btn_mood_chart">Mood chart</string>
+    <string name="btn_mood_calendar">Mood calendar</string>
     <string name="btn_options">Options</string>
     <string name="btn_take_photo">Take photo</string>
     <string name="btn_from_gallery">From gallery</string>

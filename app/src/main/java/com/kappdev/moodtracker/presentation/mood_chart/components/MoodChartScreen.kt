@@ -5,34 +5,85 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.kappdev.moodtracker.R
+import com.kappdev.moodtracker.presentation.common.components.ActionButton
+import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
+import com.kappdev.moodtracker.presentation.navigation.NavConst
+import com.kappdev.moodtracker.presentation.navigation.Screen
+import com.kappdev.moodtracker.presentation.navigation.navigateWithValue
 import java.time.LocalDate
 
 @Composable
 fun MoodChartScreen(
     navController: NavHostController
 ) {
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
-            MonthSwitchTopBar(date = LocalDate.now(), onDateChange = {})
+            DividedContent(
+                isDividerVisible = scrollState.canScrollBackward
+            ) {
+                MonthSwitchTopBar(date = LocalDate.now(), onDateChange = {})
+            }
         }
     ) { padValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padValues)
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             MoodChart(
                 modifier = Modifier
                     .height(280.dp)
                     .fillMaxWidth()
                     .padding(16.dp)
+            )
+
+            val actionButtonModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+
+            ActionButton(
+                title = stringResource(R.string.btn_today_mood),
+                modifier = actionButtonModifier,
+                onClick = {
+                    navController.navigateWithValue(
+                        route = Screen.Mood.route,
+                        valueKey = NavConst.DATE_KEY,
+                        value = LocalDate.now()
+                    )
+                }
+            )
+
+            ActionButton(
+                title = stringResource(R.string.btn_mood_calendar),
+                icon = Icons.Rounded.CalendarMonth,
+                modifier = actionButtonModifier,
+                onClick = {
+                    navController.navigate(Screen.Calendar.route)
+                }
+            )
+
+            ActionButton(
+                title = stringResource(R.string.btn_options),
+                icon = Icons.Rounded.Settings,
+                modifier = actionButtonModifier,
+                onClick = { /* TODO */ }
             )
         }
     }
