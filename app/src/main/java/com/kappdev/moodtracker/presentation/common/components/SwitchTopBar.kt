@@ -40,9 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.domain.util.getMonthName
 import com.kappdev.moodtracker.domain.util.isCurrentYear
+import com.kappdev.moodtracker.domain.util.sameMonthWith
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 @Composable
 fun WeekSwitchTopBar(
@@ -50,12 +53,13 @@ fun WeekSwitchTopBar(
     onDateChange: (newDate: LocalDate) -> Unit
 ) {
     BasicSwitchTopBar(
-        titleTransform = {
-            val firstDay = it.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-            val lastDay = it.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
-            "${getWeekTitleOf(firstDay)} - ${getWeekTitleOf(lastDay)}"
-        },
         date = date,
+        isNextEnabled = date.nextWeekEnabled(),
+        titleTransform = {
+            val weekStart = it.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            val weekEnd = it.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+            getWeekTitle(weekStart, weekEnd)
+        },
         onBack = {
             onDateChange(date.minusWeek())
         },
@@ -65,16 +69,29 @@ fun WeekSwitchTopBar(
     )
 }
 
-private fun getWeekTitleOf(date: LocalDate): String {
-    return buildString {
-        append(date.getMonthName(!date.isCurrentYear()))
-        append(" ")
-        append(date.dayOfMonth)
-        if (!date.isCurrentYear()) {
-            append(", ")
-            append(date.year)
-        }
+private fun getWeekTitle(start: LocalDate, end: LocalDate): String {
+    return if (start.sameMonthWith(end)) {
+        "${start.getMonthName()} ${start.dayOfMonth} - ${end.dayOfMonth}"
+    } else {
+        "${styleWeekDate(start)} - ${styleWeekDate(end)}"
     }
+}
+
+private fun styleWeekDate(date: LocalDate) = buildString {
+    append(date.getMonthName(!date.isCurrentYear()))
+    append(" ")
+    append(date.dayOfMonth)
+    if (!date.isCurrentYear()) {
+        append(", ")
+        append(date.year)
+    }
+}
+
+private fun LocalDate.nextWeekEnabled(): Boolean {
+    val currentDate = LocalDate.now()
+    val currentWeek = currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear())
+    val dateWeek = this.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear())
+    return dateWeek < currentWeek
 }
 
 @Composable
@@ -84,6 +101,7 @@ fun MonthSwitchTopBar(
 ) {
     BasicSwitchTopBar(
         date = date,
+        isNextEnabled = date.nextMonthEnabled(),
         titleTransform = {
             "${it.getMonthName()} ${it.year}"
         },
@@ -100,6 +118,7 @@ fun MonthSwitchTopBar(
 private fun BasicSwitchTopBar(
     date: LocalDate,
     titleTransform: (date: LocalDate) -> String,
+    isNextEnabled: Boolean,
     onBack: () -> Unit,
     onNext: () -> Unit
 ) {
@@ -124,7 +143,7 @@ private fun BasicSwitchTopBar(
 
         SwitchButton(
             icon = Icons.Rounded.ArrowForwardIos,
-            enabled = date.nextMonthEnabled(),
+            enabled = isNextEnabled,
             onClick = onNext
         )
     }

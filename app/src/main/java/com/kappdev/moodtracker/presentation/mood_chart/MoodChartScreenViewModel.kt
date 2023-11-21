@@ -41,6 +41,12 @@ class MoodChartScreenViewModel @Inject constructor(
         updateChartData()
     }
 
+    fun changeChartType(newType: ChartType) {
+        chartType = newType
+        resetDate()
+        updateChartData()
+    }
+
     private fun updateChartData() {
         chartDataJob?.cancel()
         chartDataJob = viewModelScope.launch(Dispatchers.IO) {
@@ -51,7 +57,7 @@ class MoodChartScreenViewModel @Inject constructor(
         }
     }
 
-    fun changeChartType(newType: ChartType) {
-        chartType = newType
+    private fun resetDate() {
+        currentDate = LocalDate.now()
     }
 }

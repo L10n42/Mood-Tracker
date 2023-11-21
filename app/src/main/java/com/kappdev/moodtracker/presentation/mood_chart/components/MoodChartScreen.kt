@@ -23,6 +23,7 @@ import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.presentation.common.components.ActionButton
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
+import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
 import com.kappdev.moodtracker.presentation.common.components.WeekSwitchTopBar
 import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 import com.kappdev.moodtracker.presentation.mood_chart.MoodChartScreenViewModel
@@ -76,11 +77,16 @@ fun MoodChartScreen(
                     .padding(16.dp)
             )
 
-            val actionButtonModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            ChartTypeSwitcher(
+                selected = viewModel.chartType,
+                onSelect = viewModel::changeChartType
+            )
+
+            VerticalSpace(32.dp)
 
             ActionButton(
                 title = stringResource(R.string.btn_today_mood),
-                modifier = actionButtonModifier,
+                modifier = ActionButtonModifier,
                 onClick = {
                     navController.navigateWithValue(
                         route = Screen.Mood.route,
@@ -93,7 +99,7 @@ fun MoodChartScreen(
             ActionButton(
                 title = stringResource(R.string.btn_mood_calendar),
                 icon = Icons.Rounded.CalendarMonth,
-                modifier = actionButtonModifier,
+                modifier = ActionButtonModifier,
                 onClick = {
                     navController.navigate(Screen.Calendar.route)
                 }
@@ -102,9 +108,11 @@ fun MoodChartScreen(
             ActionButton(
                 title = stringResource(R.string.btn_options),
                 icon = Icons.Rounded.Settings,
-                modifier = actionButtonModifier,
+                modifier = ActionButtonModifier,
                 onClick = { /* TODO */ }
             )
         }
     }
 }
+
+private val ActionButtonModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)

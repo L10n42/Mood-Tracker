@@ -1,6 +1,7 @@
 package com.kappdev.moodtracker.presentation.mood_chart.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -92,6 +93,7 @@ private fun ChartBar(
 
     val animatedHeight by animateFloatAsState(
         targetValue = heightTarget,
+        animationSpec = tween(500),
         label = "animated height"
     )
 

@@ -11,6 +11,8 @@
     <string name="photo_title">Photo</string>
     <string name="note_hint">Write a note...</string>
     <string name="btn_done">Done</string>
+    <string name="month_title">Month</string>
+    <string name="week_title">Week</string>
 
     <string-array name="week_days">
         <item>Mon</item>
