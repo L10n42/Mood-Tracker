@@ -12,6 +12,7 @@ import com.kappdev.moodtracker.domain.util.getMonthName
 import com.kappdev.moodtracker.domain.util.isNextMonthAfter
 import com.kappdev.moodtracker.presentation.calendar.CalendarState
 import com.kappdev.moodtracker.presentation.calendar.CalendarViewModel
+import com.kappdev.moodtracker.presentation.common.components.convexEffect
 import java.time.LocalDate
 
 @Composable
@@ -25,6 +26,7 @@ fun CalendarView(
             color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(16.dp)
         )
+        .convexEffect(RoundedCornerShape(16.dp))
         .padding(16.dp)
 
     Crossfade(

@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kappdev.moodtracker.presentation.common.components.doubleInnerShadow
+import com.kappdev.moodtracker.presentation.common.components.innerShadow
 import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 
 @Composable
@@ -46,7 +48,15 @@ fun ChartTypeSwitcher(
 ) {
     ChartTypeSwitcherLayout(
         selectedTabPosition = selected.ordinal,
-        modifier = modifier.background(MaterialTheme.colorScheme.surface, CircleShape)
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface, CircleShape)
+            .doubleInnerShadow(
+                firstColor = Color.Black.copy(0.5f),
+                secondColor = Color.White.copy(0.5f),
+                shape = CircleShape,
+                offsetY = 1.dp,
+                offsetX = 1.dp
+            )
     ) {
         ChartType.values().forEach { type ->
             TabItemView(
@@ -129,6 +139,11 @@ private fun ChartTypeSwitcherLayout(
                         .fillMaxWidth()
                         .height(maxItemHeight.toDp())
                         .background(color = indicatorColor, shape = indicatorShape)
+                        .doubleInnerShadow(
+                            firstColor = Color.White.copy(0.7f),
+                            secondColor = Color.Black.copy(0.7f),
+                            shape = CircleShape,
+                        )
                 )
             }.forEach {
                 it.measure(Constraints.fixed(tabRowWidth, maxItemHeight)).placeRelative(0, 0)

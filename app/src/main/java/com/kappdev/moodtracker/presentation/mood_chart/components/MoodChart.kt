@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.model.MoodType
+import com.kappdev.moodtracker.presentation.common.components.convexEffect
+import com.kappdev.moodtracker.presentation.common.components.doubleInnerShadow
 import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -59,6 +62,7 @@ fun MoodChart(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
             )
+            .convexEffect(RoundedCornerShape(16.dp))
             .padding(16.dp)
             .chartBackground(
                 labelHeight = LabelHeight,

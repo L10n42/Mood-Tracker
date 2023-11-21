@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.R
+import com.kappdev.moodtracker.presentation.common.components.convexEffect
 
 @Composable
 fun NoteField(
@@ -57,7 +58,8 @@ fun NoteField(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(16.dp)
                     )
-                    .padding(4.dp)
+                    .convexEffect(RoundedCornerShape(16.dp))
+                    .padding(6.dp)
                     .dashedBorder(
                         color = MaterialTheme.colorScheme.primary,
                         cornerRadiusDp = 12.dp
