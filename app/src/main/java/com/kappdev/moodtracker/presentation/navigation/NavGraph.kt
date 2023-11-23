@@ -20,20 +20,44 @@ fun SetupNavGraph(
         navController = navController,
         startDestination = Screen.Calendar.route
     ) {
-        composable(Screen.Calendar.route) {
+        composable(
+            Screen.Calendar.route,
+            enterTransition = { slideInLeft() },
+            exitTransition = { slideOutLeft() },
+            popEnterTransition = { slideInRight() },
+            popExitTransition = { slideOutRight() }
+        ) {
             CalendarScreen(navController)
         }
 
-        composable(Screen.Mood.route) { stackEntry ->
+        composable(
+            Screen.Mood.route,
+            enterTransition = { slideInLeft() },
+            exitTransition = { slideOutRight() },
+            popEnterTransition = { slideInRight() },
+            popExitTransition = { slideOutRight() }
+        ) { stackEntry ->
             val date = stackEntry.catchValue<LocalDate>(NavConst.DATE_KEY)
             MoodScreen(navController, date)
         }
 
-        composable(Screen.MoodChart.route) {
+        composable(
+            Screen.MoodChart.route,
+            enterTransition = { slideInLeft() },
+            exitTransition = { slideOutLeft() },
+            popEnterTransition = { slideInRight() },
+            popExitTransition = { slideOutRight() }
+        ) {
             MoodChartScreen(navController)
         }
 
-        composable(Screen.Options.route) {
+        composable(
+            Screen.Options.route,
+            enterTransition = { slideInLeft() },
+            exitTransition = { slideOutRight() },
+            popEnterTransition = { slideInLeft() },
+            popExitTransition = { slideOutRight() }
+        ) {
             OptionsScreen(navController, settings)
         }
     }

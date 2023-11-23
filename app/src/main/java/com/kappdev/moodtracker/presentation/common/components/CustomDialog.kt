@@ -37,6 +37,7 @@ fun CustomAlertDialog(
     text: String? = null,
     confirmText: String = stringResource(R.string.btn_confirm),
     cancelText: String = stringResource(R.string.btn_cancel),
+    dismissAfterClick: Boolean = true,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit = onDismiss
@@ -72,8 +73,14 @@ fun CustomAlertDialog(
                 CustomDialogButtons(
                     confirmText = confirmText,
                     cancelText = cancelText,
-                    onConfirm = onConfirm,
-                    onCancel = onCancel
+                    onConfirm = {
+                        if (dismissAfterClick) onDismiss()
+                        onConfirm()
+                    },
+                    onCancel = {
+                        if (dismissAfterClick) onDismiss()
+                        onCancel()
+                    }
                 )
             }
         }
@@ -84,6 +91,7 @@ fun CustomAlertDialog(
 fun CustomDialog(
     confirmText: String = stringResource(R.string.btn_confirm),
     cancelText: String = stringResource(R.string.btn_cancel),
+    dismissAfterClick: Boolean = true,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit = onDismiss,
@@ -99,8 +107,14 @@ fun CustomDialog(
                 CustomDialogButtons(
                     confirmText = confirmText,
                     cancelText = cancelText,
-                    onConfirm = onConfirm,
-                    onCancel = onCancel
+                    onConfirm = {
+                        if (dismissAfterClick) onDismiss()
+                        onConfirm()
+                    },
+                    onCancel = {
+                        if (dismissAfterClick) onDismiss()
+                        onCancel()
+                    }
                 )
             }
         }

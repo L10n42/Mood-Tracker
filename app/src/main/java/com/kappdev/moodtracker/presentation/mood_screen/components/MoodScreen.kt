@@ -45,18 +45,12 @@ fun MoodScreen(
     }
 
     if (saveDialogState.isVisible.value) {
-        CustomAlertDialog(
-            title = stringResource(R.string.unsaved_changes_title),
-            text = stringResource(R.string.unsaved_changes_msg),
-            confirmText = stringResource(R.string.btn_save),
-            cancelText = stringResource(R.string.btn_discard),
+        UnsavedChangesDialog(
             onDismiss = saveDialogState::hideDialog,
             onCancel = {
-                saveDialogState.hideDialog()
                 navController.popBackStack()
             },
             onConfirm = {
-                saveDialogState.hideDialog()
                 viewModel.saveMood { navController.popBackStack() }
             }
         )
@@ -132,6 +126,23 @@ fun MoodScreen(
             )
         }
     }
+}
+
+@Composable
+private fun UnsavedChangesDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    CustomAlertDialog(
+        title = stringResource(R.string.unsaved_changes_title),
+        text = stringResource(R.string.unsaved_changes_msg),
+        confirmText = stringResource(R.string.btn_save),
+        cancelText = stringResource(R.string.btn_discard),
+        onDismiss = onDismiss,
+        onCancel = onCancel,
+        onConfirm = onConfirm
+    )
 }
 
 @Composable
