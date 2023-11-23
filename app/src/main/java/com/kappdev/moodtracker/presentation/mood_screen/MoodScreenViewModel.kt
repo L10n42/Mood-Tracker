@@ -28,6 +28,7 @@ class MoodScreenViewModel @Inject constructor(
     private val getMoodByDate: GetMoodByDate,
     private val toaster: Toaster
 ) : ViewModel() {
+    private var originalMood: Mood? = null
 
     var date by mutableStateOf<LocalDate?>(null)
         private set
@@ -67,6 +68,15 @@ class MoodScreenViewModel @Inject constructor(
     private fun unpackMood(mood: Mood) {
         note = mood.note
         selectedMood = mood.type
+        originalMood = mood
+    }
+
+    fun hasUnsavedChanges(): Boolean {
+        return if (originalMood == null) {
+            note.isNotEmpty() || selectedMood != null
+        } else {
+            note != originalMood?.note || selectedMood != originalMood?.type
+        }
     }
 
     fun selectMood(type: MoodType) {

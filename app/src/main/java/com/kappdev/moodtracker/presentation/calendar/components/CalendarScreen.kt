@@ -97,7 +97,9 @@ fun CalendarScreen(
                 title = stringResource(R.string.btn_options),
                 icon = Icons.Rounded.Settings,
                 modifier = actionButtonModifier,
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate(Screen.Options.route)
+                }
             )
         }
     }

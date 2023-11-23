@@ -21,8 +21,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kappdev.moodtracker.R
+import com.kappdev.moodtracker.presentation.common.components.CustomAlertDialog
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
+import com.kappdev.moodtracker.presentation.common.rememberMutableDialogState
 import com.kappdev.moodtracker.presentation.mood_screen.MoodScreenViewModel
 import java.time.LocalDate
 
@@ -33,12 +35,31 @@ fun MoodScreen(
     viewModel: MoodScreenViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
+    val saveDialogState = rememberMutableDialogState(null)
 
     LaunchedEffect(date) {
         viewModel.changeDate(date)
         viewModel.getMoodData {
             navController.popBackStack()
         }
+    }
+
+    if (saveDialogState.isVisible.value) {
+        CustomAlertDialog(
+            title = stringResource(R.string.unsaved_changes_title),
+            text = stringResource(R.string.unsaved_changes_msg),
+            confirmText = stringResource(R.string.btn_save),
+            cancelText = stringResource(R.string.btn_discard),
+            onDismiss = saveDialogState::hideDialog,
+            onCancel = {
+                saveDialogState.hideDialog()
+                navController.popBackStack()
+            },
+            onConfirm = {
+                saveDialogState.hideDialog()
+                viewModel.saveMood { navController.popBackStack() }
+            }
+        )
     }
 
     Scaffold(
@@ -48,7 +69,12 @@ fun MoodScreen(
             ) {
                 MoodTopBar(
                     date = viewModel.date,
-                    onBack = { navController.popBackStack() }
+                    onBack = {
+                        when {
+                            viewModel.hasUnsavedChanges() -> saveDialogState.showDialog()
+                            else -> navController.popBackStack()
+                        }
+                    }
                 )
             }
         },

@@ -10,7 +10,7 @@ fun Modifier.convexEffect(
     shape: Shape,
     intensity: Dp = 2.dp
 ) = this.innerShadow(
-    color = Color.White.copy(0.72f),
+    color = Color.White.copy(0.54f),
     shape = shape,
     offsetY = intensity,
     offsetX = intensity

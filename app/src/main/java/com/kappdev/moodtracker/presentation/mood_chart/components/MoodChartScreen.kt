@@ -109,7 +109,9 @@ fun MoodChartScreen(
                 title = stringResource(R.string.btn_options),
                 icon = Icons.Rounded.Settings,
                 modifier = ActionButtonModifier,
-                onClick = { /* TODO */ }
+                onClick = {
+                    navController.navigate(Screen.Options.route)
+                }
             )
         }
     }

@@ -13,6 +13,16 @@
     <string name="btn_done">Done</string>
     <string name="month_title">Month</string>
     <string name="week_title">Week</string>
+    <string name="options_title">Options</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_save">Save</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system_default">System default</string>
+    <string name="btn_discard">Discard</string>
+    <string name="unsaved_changes_title">Unsaved changes</string>
+    <string name="unsaved_changes_msg">It looks like you\'ve made changes. Would you like to save them before leaving?</string>
 
     <string-array name="week_days">
         <item>Mon</item>

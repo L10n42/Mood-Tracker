@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.kappdev.moodtracker.domain.util.Theme
 
 
 private val DarkColorScheme = darkColorScheme(
@@ -52,11 +53,17 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MoodTrackerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    theme: Theme,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    val darkTheme = when(theme) {
+        Theme.LIGHT -> false
+        Theme.DARK -> true
+        Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current

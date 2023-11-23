@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.room.Room
 import com.kappdev.moodtracker.data.data_source.MoodDatabase
 import com.kappdev.moodtracker.data.repository.MoodRepositoryImpl
+import com.kappdev.moodtracker.data.repository.SettingsManagerImpl
 import com.kappdev.moodtracker.domain.repository.MoodRepository
+import com.kappdev.moodtracker.domain.repository.SettingsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,5 +31,9 @@ object AppModule {
         return MoodRepositoryImpl(db.moodDao)
     }
 
-
+    @Provides
+    @Singleton
+    fun provideSettingsManager(app: Application): SettingsManager {
+        return SettingsManagerImpl(app)
+    }
 }

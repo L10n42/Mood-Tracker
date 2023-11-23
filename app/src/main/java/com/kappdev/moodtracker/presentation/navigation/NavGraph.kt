@@ -4,14 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.kappdev.moodtracker.domain.repository.SettingsManager
 import com.kappdev.moodtracker.presentation.calendar.components.CalendarScreen
 import com.kappdev.moodtracker.presentation.mood_chart.components.MoodChartScreen
 import com.kappdev.moodtracker.presentation.mood_screen.components.MoodScreen
+import com.kappdev.moodtracker.presentation.options.components.OptionsScreen
 import java.time.LocalDate
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    settings: SettingsManager
 ) {
     NavHost(
         navController = navController,
@@ -28,6 +31,10 @@ fun SetupNavGraph(
 
         composable(Screen.MoodChart.route) {
             MoodChartScreen(navController)
+        }
+
+        composable(Screen.Options.route) {
+            OptionsScreen(navController, settings)
         }
     }
 }
