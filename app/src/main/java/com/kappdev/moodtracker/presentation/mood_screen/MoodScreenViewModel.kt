@@ -1,22 +1,29 @@
 package com.kappdev.moodtracker.presentation.mood_screen
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kappdev.moodtracker.domain.model.Image
 import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.GetMoodByDate
 import com.kappdev.moodtracker.domain.use_case.InsertMood
+import com.kappdev.moodtracker.domain.util.ResultState
+import com.kappdev.moodtracker.domain.util.StoreImageException
 import com.kappdev.moodtracker.domain.util.Toaster
-import com.kappdev.moodtracker.domain.util.messageOrNull
+import com.kappdev.moodtracker.presentation.common.DialogState
+import com.kappdev.moodtracker.presentation.common.mutableDialogStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -33,8 +40,8 @@ class MoodScreenViewModel @Inject constructor(
     var date by mutableStateOf<LocalDate?>(null)
         private set
 
-    var isLoading by mutableStateOf(false)
-        private set
+    private var _loadingDialogState = mutableDialogStateOf<String?>(null)
+    val loadingDialogState: DialogState<String?> = _loadingDialogState
 
     var selectedMood by mutableStateOf<MoodType?>(null)
         private set
@@ -42,41 +49,62 @@ class MoodScreenViewModel @Inject constructor(
     var note by mutableStateOf("")
         private set
 
-    fun saveMood(onSuccess: () -> Unit) {
-        viewModelScope.launchLoading(Dispatchers.IO) {
-            val result = insertMood(date, selectedMood, note)
+    private var _images = mutableStateListOf<Image>()
+    val images: List<Image> = _images
 
-            withContext(Dispatchers.Main) {
-                when {
-                    result.isSuccess -> onSuccess()
-                    result.isFailure -> result.messageOrNull()?.let(toaster::show)
+    private var saveJob: Job? = null
+
+    fun saveMood(onSuccess: () -> Unit) {
+        saveJob?.cancel()
+        saveJob = viewModelScope.launch(Dispatchers.IO) {
+            insertMood(date, selectedMood, note, images).collect { resultState ->
+                when (resultState) {
+                    is ResultState.Loading -> _loadingDialogState.showDialog(resultState.message)
+                    is ResultState.Failure -> withContext(Dispatchers.Main) {
+                        if (resultState.exception !is StoreImageException) {
+                            _loadingDialogState.hideDialog()
+                        }
+                        resultState.exception.message?.let(toaster::show)
+                    }
+                    is ResultState.Success -> withContext(Dispatchers.Main) {
+                        _loadingDialogState.hideDialog()
+                        onSuccess()
+                    }
                 }
             }
         }
     }
 
     fun getMoodData(onFailure: () -> Unit) {
-        viewModelScope.launchLoading(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _loadingDialogState.showDialog(null)
             val mood = date?.let { getMoodByDate(it) }
             when {
                 (date != null && mood != null) -> unpackMood(mood)
                 (date == null) -> withContext(Dispatchers.Main) { onFailure() }
             }
+            _loadingDialogState.hideDialog()
         }
     }
 
     private fun unpackMood(mood: Mood) {
         note = mood.note
         selectedMood = mood.type
+        val moodImages = mood.images?.map { Image.Stored(it) } ?: emptyList()
+        _images.addAll(moodImages)
         originalMood = mood
     }
 
     fun hasUnsavedChanges(): Boolean {
         return if (originalMood == null) {
-            note.isNotEmpty() || selectedMood != null
+            note.isNotEmpty() || images.isNotEmpty() || selectedMood != null
         } else {
-            note != originalMood?.note || selectedMood != originalMood?.type
+            note != originalMood?.note || selectedMood != originalMood?.type || unsavedImages()
         }
+    }
+
+    private fun unsavedImages(): Boolean {
+        return images.size != originalMood?.images?.size || images.count { it is Image.NotStored } > 0
     }
 
     fun selectMood(type: MoodType) {
@@ -91,14 +119,18 @@ class MoodScreenViewModel @Inject constructor(
         this.date = date
     }
 
-    private fun CoroutineScope.launchLoading(
-        context: CoroutineContext = EmptyCoroutineContext,
-        block: suspend CoroutineScope.() -> Unit
-    ): Job {
-        return this.launch(context) {
-            this@MoodScreenViewModel.isLoading = true
-            block()
-            this@MoodScreenViewModel.isLoading = false
+    fun addImage(uri: Uri) {
+        _images.add(Image.NotStored(uri))
+    }
+
+    fun addImages(images: List<Uri>) {
+        _images.addAll(images.map { Image.NotStored(it) })
+    }
+
+    fun removeImage(image: Image) {
+        if (image is Image.Stored) {
+            File(image.path).deleteOnExit()
         }
+        _images.remove(image)
     }
 }

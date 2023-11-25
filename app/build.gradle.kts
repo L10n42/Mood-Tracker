@@ -104,6 +104,9 @@ dependencies {
     /* Local Date and Time support */
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
+    /* Coil image */
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     /* Data store */
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 

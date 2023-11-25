@@ -207,7 +207,7 @@ private fun CustomDialogButton(
         Text(
             text = text,
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurface.copy(pressTextAlpha),
+            color = MaterialTheme.colorScheme.primary.copy(pressTextAlpha),
             fontWeight = FontWeight.SemiBold
         )
     }

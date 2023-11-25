@@ -7,6 +7,7 @@ import com.kappdev.moodtracker.data.repository.MoodRepositoryImpl
 import com.kappdev.moodtracker.data.repository.SettingsManagerImpl
 import com.kappdev.moodtracker.domain.repository.MoodRepository
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.use_case.StoreImage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +36,11 @@ object AppModule {
     @Singleton
     fun provideSettingsManager(app: Application): SettingsManager {
         return SettingsManagerImpl(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStoreImage(app: Application): StoreImage {
+        return StoreImage(app)
     }
 }

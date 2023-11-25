@@ -84,7 +84,8 @@ private fun PhotoButton(
             maxLines = 1,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }
