@@ -3,8 +3,11 @@ package com.kappdev.moodtracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.kappdev.moodtracker.domain.repository.SettingsManager
 import com.kappdev.moodtracker.domain.util.Settings
 import com.kappdev.moodtracker.domain.util.Theme
@@ -26,6 +29,13 @@ class MainActivity : ComponentActivity() {
 
             MoodTrackerTheme(theme = Theme.valueOf(theme)) {
                 val navController = rememberNavController()
+                val systemUiController = rememberSystemUiController()
+                val backgroundColor = MaterialTheme.colorScheme.background
+
+                SideEffect {
+                    systemUiController.setSystemBarsColor(backgroundColor)
+                }
+
                 SetupNavGraph(navController, settings)
             }
         }
