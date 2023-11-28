@@ -12,59 +12,59 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.R
-import com.kappdev.moodtracker.domain.util.Theme
+import com.kappdev.moodtracker.domain.util.MainScreen
 import com.kappdev.moodtracker.presentation.common.DialogState
 import com.kappdev.moodtracker.presentation.common.components.CustomDialog
 import com.kappdev.moodtracker.presentation.common.components.TitledRadioButton
 
 @Composable
-fun ThemeDialog(
-    state: DialogState<Theme>,
+fun MainScreenDialog(
+    state: DialogState<MainScreen>,
     onDismiss: () -> Unit,
-    onConfirm: (Theme) -> Unit
+    onConfirm: (MainScreen) -> Unit
 ) {
     if (state.isVisible.value) {
-        ThemeDialog(
-            initialTheme = state.dialogData.value,
+        MainScreenDialog(
+            initialMainScreen = state.dialogData.value,
             onConfirm = onConfirm,
             onDismiss = onDismiss
         )
     }
 }
 
+
 @Composable
-fun ThemeDialog(
-    initialTheme: Theme,
+fun MainScreenDialog(
+    initialMainScreen: MainScreen,
     onDismiss: () -> Unit,
     onCancel: () -> Unit = onDismiss,
-    onConfirm: (Theme) -> Unit,
+    onConfirm: (MainScreen) -> Unit,
 ) {
-    var selectedTheme by remember { mutableStateOf(initialTheme) }
+    var selectedMainScreen by remember { mutableStateOf(initialMainScreen) }
 
     CustomDialog(
         confirmText = stringResource(R.string.btn_save),
         onDismiss = onDismiss,
         onConfirm = {
-            onConfirm(selectedTheme)
+            onConfirm(selectedMainScreen)
         },
         onCancel = onCancel
     ) {
         Column {
             Text(
-                text = stringResource(R.string.select_color_mode),
+                text = stringResource(R.string.select_main_screen),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            Theme.values().forEach { theme ->
+            MainScreen.values().forEach { mainScreen ->
                 TitledRadioButton(
-                    title = stringResource(theme.titleRes),
-                    selected = (theme == selectedTheme),
-                    onClick = { selectedTheme = theme }
+                    title = stringResource(mainScreen.titleRes),
+                    selected = (mainScreen == selectedMainScreen),
+                    onClick = { selectedMainScreen = mainScreen }
                 )
             }
         }
     }
 }
-

@@ -14,11 +14,12 @@ import java.time.LocalDate
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
+    startDestination: String,
     settings: SettingsManager
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Calendar.route
+        startDestination = startDestination
     ) {
         composable(
             Screen.Calendar.route,

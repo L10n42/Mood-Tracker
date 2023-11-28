@@ -18,7 +18,6 @@ import com.kappdev.moodtracker.domain.util.Toaster
 import com.kappdev.moodtracker.presentation.common.DialogState
 import com.kappdev.moodtracker.presentation.common.mutableDialogStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -26,8 +25,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 @HiltViewModel
 class MoodScreenViewModel @Inject constructor(

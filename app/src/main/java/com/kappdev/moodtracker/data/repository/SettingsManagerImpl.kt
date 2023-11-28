@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.kappdev.moodtracker.domain.repository.SettingsManager
 import com.kappdev.moodtracker.domain.util.Settings
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -22,6 +23,10 @@ class SettingsManagerImpl @Inject constructor(
     @Composable
     override fun <T> getValueAsState(settings: Settings<T>): State<T> {
         return getValueBy(settings).collectAsState(settings.default)
+    }
+
+    override suspend fun <T> getValueFlow(settings: Settings<T>): Flow<T> {
+        return getValueBy(settings)
     }
 
     private fun <T> getValueBy(setting: Settings<T>) = context.dataStore.data.map { preferences ->

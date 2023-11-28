@@ -27,13 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.util.MainScreen
 import com.kappdev.moodtracker.domain.util.Settings
 import com.kappdev.moodtracker.domain.util.Theme
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
@@ -49,19 +50,30 @@ fun OptionsScreen(
     val scope = rememberCoroutineScope()
 
     val themeName by settings.getValueAsState(Settings.Theme)
+    val mainScreenName by settings.getValueAsState(Settings.MainScreen)
     val theme = Theme.valueOf(themeName)
+    val mainScreen = MainScreen.valueOf(mainScreenName)
+
     val themeDialogState = rememberMutableDialogState(initialData = theme)
+    val mainScreenDialog = rememberMutableDialogState(initialData = mainScreen)
 
     fun manageSettings(block: suspend SettingsManager.() -> Unit) {
         scope.launch { with(settings) { block() } }
     }
+
+    MainScreenDialog(
+        state = mainScreenDialog,
+        onDismiss = mainScreenDialog::hideDialog,
+        onConfirm = { newMainScreen ->
+            manageSettings { setValueTo(Settings.MainScreen, newMainScreen.name) }
+        }
+    )
 
     ThemeDialog(
         state = themeDialogState,
         onDismiss = themeDialogState::hideDialog,
         onConfirm = { newTheme ->
             manageSettings { setValueTo(Settings.Theme, newTheme.name) }
-            themeDialogState.hideDialog()
         }
     )
 
@@ -78,7 +90,7 @@ fun OptionsScreen(
                 .padding(padValues)
         ) {
             Item(
-                title = "Remainder",
+                title = stringResource(R.string.remainder_option),
                 icon = Icons.Rounded.Notifications,
                 subTitle = "21:00",
                 modifier = Modifier.settingView(),
@@ -91,7 +103,7 @@ fun OptionsScreen(
                 modifier = Modifier.settingView()
             ) {
                 Item(
-                    title = "Color mode",
+                    title = stringResource(R.string.color_mode_option),
                     icon = Icons.Rounded.Contrast,
                     subTitle = stringResource(theme.titleRes),
                     onClick = {
@@ -99,10 +111,12 @@ fun OptionsScreen(
                     }
                 )
                 Item(
-                    title = "Main screen",
+                    title = stringResource(R.string.main_screen_option),
                     icon = Icons.Rounded.Home,
-                    subTitle = "Calendar",
-                    onClick = { /* TODO */ }
+                    subTitle = stringResource(mainScreen.titleRes),
+                    onClick = {
+                        mainScreenDialog.showDialog(mainScreen)
+                    }
                 )
                 Item(
                     title = "Something else",

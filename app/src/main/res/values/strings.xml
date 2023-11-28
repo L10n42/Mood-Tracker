@@ -27,6 +27,13 @@
     <string name="btn_delete">Delete</string>
     <string name="delete_photo_title">Delete Photo</string>
     <string name="delete_photo_msg">Are you sure you want to delete this photo?</string>
+    <string name="screen_mood_calendar">Mood calendar</string>
+    <string name="screen_mood_chart">Mood chart</string>
+    <string name="select_color_mode">Select color mode</string>
+    <string name="select_main_screen">Select main screen</string>
+    <string name="main_screen_option">Main screen</string>
+    <string name="color_mode_option">Color mode</string>
+    <string name="remainder_option">Remainder</string>
 
     <string-array name="week_days">
         <item>Mon</item>
