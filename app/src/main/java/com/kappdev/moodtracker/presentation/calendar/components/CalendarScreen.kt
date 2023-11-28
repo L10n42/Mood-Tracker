@@ -62,11 +62,13 @@ fun CalendarScreen(
                 viewModel = viewModel,
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 onDateClick = { date ->
-                    navController.navigateWithValue(
-                        route = Screen.Mood.route,
-                        valueKey = NavConst.DATE_KEY,
-                        value = date
-                    )
+                    viewModel.ifDateIsValid(date) {
+                        navController.navigateWithValue(
+                            route = Screen.Mood.route,
+                            valueKey = NavConst.DATE_KEY,
+                            value = date
+                        )
+                    }
                 }
             )
 
