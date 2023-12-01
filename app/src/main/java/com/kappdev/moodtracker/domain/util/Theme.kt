@@ -8,3 +8,13 @@ enum class Theme(@StringRes val titleRes: Int) {
     DARK(R.string.theme_dark),
     SYSTEM_DEFAULT(R.string.theme_system_default)
 }
+
+class ThemeTransformer: SettingsTransformer<Theme, String> {
+    override fun serialize(value: Theme): String {
+        return value.name
+    }
+
+    override fun deserialize(name: String): Theme {
+        return Theme.valueOf(name)
+    }
+}

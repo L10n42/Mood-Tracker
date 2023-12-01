@@ -101,6 +101,9 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
+    /* Jetpack Compose Date/Time picker */
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+
     /* Local Date and Time support */
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 

@@ -21,21 +21,22 @@ class SettingsManagerImpl @Inject constructor(
 ) : SettingsManager {
 
     @Composable
-    override fun <T> getValueAsState(settings: Settings<T>): State<T> {
+    override fun <V, P> getValueAsState(settings: Settings<V, P>): State<V> {
         return getValueBy(settings).collectAsState(settings.default)
     }
 
-    override suspend fun <T> getValueFlow(settings: Settings<T>): Flow<T> {
+    override suspend fun <V, P> getValueFlow(settings: Settings<V, P>): Flow<V> {
         return getValueBy(settings)
     }
 
-    private fun <T> getValueBy(setting: Settings<T>) = context.dataStore.data.map { preferences ->
-        preferences[setting.key] ?: setting.default
+    private fun <V, P> getValueBy(settings: Settings <V, P>) = context.dataStore.data.map { preferences ->
+        val value = preferences[settings.key] ?: settings.transformer.serialize(settings.default)
+        settings.transformer.deserialize(value)
     }
 
-    override suspend fun <T> setValueTo(settings: Settings<T>, value: T) {
+    override suspend fun <V, P> setValueTo(settings: Settings<V, P>, value: V) {
         context.dataStore.edit { preferences ->
-            preferences[settings.key] = value
+            preferences[settings.key] = settings.transformer.serialize(value)
         }
     }
 }

@@ -33,8 +33,16 @@
     <string name="select_main_screen">Select main screen</string>
     <string name="main_screen_option">Main screen</string>
     <string name="color_mode_option">Color mode</string>
-    <string name="remainder_option">Remainder</string>
+    <string name="reminder_option">Reminder</string>
     <string name="invalid_future_date_msg">Invalid future date.</string>
+    <string name="remainder_time">Time</string>
+    <string name="btn_select">Select</string>
+    <string name="permission_not_granted_msg">Permission not granted</string>
+    <string name="reminder_set_msg">Reminder set</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_required_msg">To enable reminder, this app requires permission to set exact alarms</string>
+    <string name="btn_grant">Grant</string>
+    <string name="btn_deny">Deny</string>
 
     <string-array name="week_days">
         <item>Mon</item>
