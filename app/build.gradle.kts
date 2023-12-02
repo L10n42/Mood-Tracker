@@ -117,7 +117,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     /* Animation Lottie */
-    implementation("com.airbnb.android:lottie-compose:6.1.0")
+    val lottieVersion = "6.2.0"
+    implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 
     /* Default tests */
     testImplementation("junit:junit:4.13.2")

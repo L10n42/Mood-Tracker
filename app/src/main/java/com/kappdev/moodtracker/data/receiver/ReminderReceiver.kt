@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class ReminderReceiver : BroadcastReceiver() {
@@ -48,8 +47,7 @@ class ReminderReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context, ACTIVITY_REQUEST_CODE, contentIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).apply {
-            setContentTitle("Remainder")
-            setContentText("How do your feel today?")
+            setContentTitle("How do your feel today?")
             setAutoCancel(true)
             setCategory(NotificationCompat.CATEGORY_REMINDER)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
