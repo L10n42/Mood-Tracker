@@ -43,6 +43,7 @@
     <string name="permission_required_msg">To enable reminder, this app requires permission to set exact alarms</string>
     <string name="btn_grant">Grant</string>
     <string name="btn_deny">Deny</string>
+    <string name="share_image_title">Share Via</string>
 
     <string-array name="week_days">
         <item>Mon</item>

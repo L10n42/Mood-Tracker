@@ -11,6 +11,7 @@ import com.kappdev.moodtracker.data.repository.SettingsManagerImpl
 import com.kappdev.moodtracker.domain.repository.MoodRepository
 import com.kappdev.moodtracker.domain.repository.ReminderManager
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.use_case.ShareImage
 import com.kappdev.moodtracker.domain.use_case.StoreImage
 import dagger.Module
 import dagger.Provides
@@ -47,6 +48,12 @@ object AppModule {
     @Singleton
     fun provideStoreImage(app: Application): StoreImage {
         return StoreImage(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideShareImage(app: Application): ShareImage {
+        return ShareImage(app)
     }
 
     @Provides

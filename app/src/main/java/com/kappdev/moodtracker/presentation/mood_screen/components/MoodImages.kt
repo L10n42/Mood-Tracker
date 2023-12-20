@@ -35,6 +35,7 @@ fun MoodImages(
     images: List<Image>,
     modifier: Modifier = Modifier,
     removeImage: (image: Image) -> Unit,
+    shareImage: (image: Image) -> Unit
 ) {
     val deleteImageDialog = rememberMutableDialogState<Image?>(initialData = null)
     val overviewImageDialog = rememberMutableDialogState<Image?>(initialData = null)
@@ -42,7 +43,8 @@ fun MoodImages(
     if (overviewImageDialog.isVisible.value) {
         OverviewImageDialog(
             image = overviewImageDialog.dialogData.value,
-            onDismiss = overviewImageDialog::hideDialog
+            onDismiss = overviewImageDialog::hideDialog,
+            onShare = shareImage
         )
     }
 
@@ -107,7 +109,9 @@ private fun ImageCard(
             modifier = modifier.clip(shape).clickable(onClick = onOverview),
             contentScale = ContentScale.Crop,
             loading = {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier.size(42.dp)
+                )
             },
             error = {
                 Icon(
