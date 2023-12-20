@@ -160,7 +160,8 @@ fun MoodScreen(
             MoodImages(
                 images = viewModel.images,
                 modifier = contentModifier,
-                removeImage = viewModel::removeImage
+                removeImage = viewModel::removeImage,
+                shareImage = viewModel::shareImage
             )
 
             VerticalSpace(64.dp)

@@ -12,6 +12,7 @@ import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.GetMoodByDate
 import com.kappdev.moodtracker.domain.use_case.InsertMood
+import com.kappdev.moodtracker.domain.use_case.ShareImage
 import com.kappdev.moodtracker.domain.util.ResultState
 import com.kappdev.moodtracker.domain.util.StoreImageException
 import com.kappdev.moodtracker.domain.util.Toaster
@@ -29,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MoodScreenViewModel @Inject constructor(
     private val insertMood: InsertMood,
+    private val shareImage: ShareImage,
     private val getMoodByDate: GetMoodByDate,
     private val toaster: Toaster
 ) : ViewModel() {
@@ -102,6 +104,10 @@ class MoodScreenViewModel @Inject constructor(
 
     private fun unsavedImages(): Boolean {
         return images.size != originalMood?.images?.size || images.count { it is Image.NotStored } > 0
+    }
+
+    fun shareImage(image: Image) {
+        this.shareImage(image.model)
     }
 
     fun selectMood(type: MoodType) {
