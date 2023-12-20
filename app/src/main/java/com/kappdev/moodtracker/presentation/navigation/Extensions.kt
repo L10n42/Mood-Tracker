@@ -1,7 +1,12 @@
 package com.kappdev.moodtracker.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.getInitialRoute(): String? {
+    return this.initialState.destination.route
+}
 
 fun <T> NavBackStackEntry.catchValue(key: String): T? {
     return this.savedStateHandle.get<T>(key)

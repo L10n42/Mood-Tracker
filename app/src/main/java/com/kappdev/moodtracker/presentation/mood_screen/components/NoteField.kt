@@ -58,7 +58,6 @@ fun NoteField(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(16.dp)
                     )
-                    .convexEffect(RoundedCornerShape(16.dp))
                     .padding(6.dp)
                     .dashedBorder(
                         color = MaterialTheme.colorScheme.primary,

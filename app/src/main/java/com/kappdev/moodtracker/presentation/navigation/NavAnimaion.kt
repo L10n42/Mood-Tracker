@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.navigation.NavBackStackEntry
 
 fun AnimatedContentTransitionScope<NavBackStackEntry>.slideInLeft(): EnterTransition {
@@ -30,6 +32,18 @@ fun AnimatedContentTransitionScope<NavBackStackEntry>.slideOutRight(): ExitTrans
 fun AnimatedContentTransitionScope<NavBackStackEntry>.slideOutLeft(): ExitTransition {
     return slideOutOfContainer(
         towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+        animationSpec = tween(DEFAULT_ANIM_DURATION)
+    )
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.fadeInAnim(): EnterTransition {
+    return fadeIn(
+        animationSpec = tween(DEFAULT_ANIM_DURATION)
+    )
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.fadeOutAnim(): ExitTransition {
+    return fadeOut(
         animationSpec = tween(DEFAULT_ANIM_DURATION)
     )
 }

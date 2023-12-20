@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.presentation.common.components.CustomAlertDialog
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
@@ -37,18 +36,16 @@ import java.time.LocalDate
 
 @Composable
 fun MoodScreen(
-    navController: NavHostController,
     date: LocalDate?,
-    viewModel: MoodScreenViewModel = hiltViewModel()
+    viewModel: MoodScreenViewModel = hiltViewModel(),
+    onBack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val saveDialogState = rememberMutableDialogState(null)
 
     LaunchedEffect(date) {
         viewModel.changeDate(date)
-        viewModel.getMoodData {
-            navController.popBackStack()
-        }
+        viewModel.getMoodData(onFailure = onBack)
     }
 
     LoadingDialog(viewModel.loadingDialogState)
@@ -56,9 +53,9 @@ fun MoodScreen(
     if (saveDialogState.isVisible.value) {
         UnsavedChangesDialog(
             onDismiss = saveDialogState::hideDialog,
-            onCancel = { navController.popBackStack() },
+            onCancel = onBack,
             onConfirm = {
-                viewModel.saveMood { navController.popBackStack() }
+                viewModel.saveMood(onSuccess = onBack)
             }
         )
     }
@@ -95,7 +92,7 @@ fun MoodScreen(
                     onBack = {
                         when {
                             viewModel.hasUnsavedChanges() -> saveDialogState.showDialog()
-                            else -> navController.popBackStack()
+                            else -> onBack()
                         }
                     }
                 )
@@ -104,7 +101,7 @@ fun MoodScreen(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             DoneButton {
-                viewModel.saveMood { navController.popBackStack() }
+                viewModel.saveMood(onSuccess = onBack)
             }
         }
     ) { padValues ->
