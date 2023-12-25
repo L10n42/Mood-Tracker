@@ -27,9 +27,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMoodDatabase(app: Application): MoodDatabase {
-        return Room.databaseBuilder(app, MoodDatabase::class.java, MoodDatabase.NAME)
-            .fallbackToDestructiveMigration()
-            .build()
+        return Room.databaseBuilder(app, MoodDatabase::class.java, MoodDatabase.NAME).build()
     }
 
     @Provides
