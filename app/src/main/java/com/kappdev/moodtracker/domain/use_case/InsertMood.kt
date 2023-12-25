@@ -51,13 +51,13 @@ class InsertMood @Inject constructor(
         }
     }
 
-    private suspend fun FlowCollector<ResultState<Long>>.storeImages(images: List<Image>): List<String> {
+    private suspend fun FlowCollector<ResultState<Long>>.storeImages(images: List<Image>): List<String>? {
         return images.mapNotNull { image ->
             when (image) {
                 is Image.Stored -> image.path
                 is Image.NotStored -> storeImage(image)
             }
-        }
+        }.ifEmpty { null }
     }
 
     private suspend fun FlowCollector<ResultState<Long>>.storeImage(image: Image.NotStored): String? {

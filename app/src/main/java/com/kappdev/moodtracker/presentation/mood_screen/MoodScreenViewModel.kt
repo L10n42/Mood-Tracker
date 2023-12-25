@@ -1,6 +1,7 @@
 package com.kappdev.moodtracker.presentation.mood_screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -89,8 +90,7 @@ class MoodScreenViewModel @Inject constructor(
     private fun unpackMood(mood: Mood) {
         note = mood.note
         selectedMood = mood.type
-        val moodImages = mood.images?.map { Image.Stored(it) } ?: emptyList()
-        _images.addAll(moodImages)
+        mood.images?.map(Image::Stored)?.let(::updateImages)
         originalMood = mood
     }
 
@@ -128,6 +128,11 @@ class MoodScreenViewModel @Inject constructor(
 
     fun addImages(images: List<Uri>) {
         _images.addAll(images.map { Image.NotStored(it) })
+    }
+
+    private fun updateImages(images: List<Image.Stored>) {
+        _images.removeIf { it is Image.Stored }
+        _images.addAll(images)
     }
 
     fun removeImage(image: Image) {
