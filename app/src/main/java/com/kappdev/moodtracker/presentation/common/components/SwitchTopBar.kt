@@ -89,9 +89,17 @@ private fun styleWeekDate(date: LocalDate) = buildString {
 
 private fun LocalDate.nextWeekEnabled(): Boolean {
     val currentDate = LocalDate.now()
+    val currentWeekYear = currentDate.get(WeekFields.of(Locale.getDefault()).weekBasedYear())
     val currentWeek = currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear())
+
+    val dateWeekYear = this.get(WeekFields.of(Locale.getDefault()).weekBasedYear())
     val dateWeek = this.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear())
-    return dateWeek < currentWeek
+
+    return if (dateWeekYear == currentWeekYear) {
+        dateWeek < currentWeek
+    } else {
+        dateWeekYear < currentWeekYear
+    }
 }
 
 @Composable
