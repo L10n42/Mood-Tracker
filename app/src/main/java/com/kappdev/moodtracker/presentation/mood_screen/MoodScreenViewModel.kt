@@ -103,7 +103,9 @@ class MoodScreenViewModel @Inject constructor(
     }
 
     private fun unsavedImages(): Boolean {
-        return images.size != originalMood?.images?.size || images.count { it is Image.NotStored } > 0
+        val countChanged = (originalMood?.images != null && images.size != originalMood?.images?.size)
+        val hasNotStoredImages = images.count { it is Image.NotStored } > 0
+        return (countChanged || hasNotStoredImages)
     }
 
     fun shareImage(image: Image) {
