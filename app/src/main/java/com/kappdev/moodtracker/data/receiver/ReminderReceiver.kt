@@ -5,17 +5,20 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.kappdev.moodtracker.MainActivity
 import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.repository.ReminderManager
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.use_case.GetMoodByDate
 import com.kappdev.moodtracker.domain.util.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,10 +33,16 @@ class ReminderReceiver : BroadcastReceiver() {
     @Inject
     lateinit var settings: SettingsManager
 
-    override fun onReceive(context: Context, intent: Intent?) {
-        sendReminderNotification(context)
+    @Inject
+    lateinit var getMoodByDate: GetMoodByDate
 
+    override fun onReceive(context: Context, intent: Intent?) {
         CoroutineScope(Dispatchers.IO).launch {
+            val todayMood = getMoodByDate(LocalDate.now())
+            if (todayMood == null) {
+                sendReminderNotification(context)
+            }
+
             val remainder = settings.getValueFlow(Settings.Reminder).first()
             if (remainder.enabled) {
                 reminderManager.setRemainder(remainder.time)
