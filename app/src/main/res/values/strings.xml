@@ -2,7 +2,8 @@
     <string name="app_name">Mood Tracker</string>
     <string name="mood_picker_title">How are you?</string>
     <string name="quick_note_title">Quick note</string>
-    <string name="btn_today_mood">How do you feel today?</string>
+    <string name="today_mood_question">How do you feel today?</string>
+    <string name="btn_open_app">Open App</string>
     <string name="btn_mood_chart">Mood chart</string>
     <string name="btn_mood_calendar">Mood calendar</string>
     <string name="btn_options">Options</string>

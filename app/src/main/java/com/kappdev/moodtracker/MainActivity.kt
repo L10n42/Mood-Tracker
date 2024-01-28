@@ -1,5 +1,6 @@
 package com.kappdev.moodtracker
 
+import android.app.NotificationManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -35,6 +36,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settings: SettingsManager
 
+    @Inject
+    lateinit var notificationManager: NotificationManager
+
     private var theme by mutableStateOf<Theme?>(null)
     private var mainScreen by mutableStateOf<MainScreen?>(null)
     private var isReminderIntent = false
@@ -43,6 +47,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         isReminderIntent = intent.getBooleanExtra(ReminderReceiver.IS_REMINDER_INTENT, false)
+        if (isReminderIntent) {
+            notificationManager.cancel(ReminderReceiver.NOTIFICATION_ID)
+        }
 
         launchThemeListener()
         launchMainScreenListener()

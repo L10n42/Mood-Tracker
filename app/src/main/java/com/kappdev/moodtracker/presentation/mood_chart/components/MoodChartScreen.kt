@@ -85,7 +85,7 @@ fun MoodChartScreen(
             VerticalSpace(32.dp)
 
             ActionButton(
-                title = stringResource(R.string.btn_today_mood),
+                title = stringResource(R.string.today_mood_question),
                 modifier = ActionButtonModifier,
                 onClick = {
                     navController.navigateWithValue(

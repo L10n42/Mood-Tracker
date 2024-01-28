@@ -75,7 +75,7 @@ fun CalendarScreen(
             val actionButtonModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
 
             ActionButton(
-                title = stringResource(R.string.btn_today_mood),
+                title = stringResource(R.string.today_mood_question),
                 modifier = actionButtonModifier,
                 onClick = {
                     navController.navigateWithValue(
