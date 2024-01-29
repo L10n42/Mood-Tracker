@@ -3,7 +3,7 @@ package com.kappdev.moodtracker.presentation.calendar.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
@@ -124,12 +124,20 @@ fun CalendarLayout(
 private fun StreakView(
     streak: MoodStreak
 ) {
+    val startPercent = if (streak.isOpen) 0 else 50
+    val endPercent = if (streak.isClose) 0 else 50
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = streak.type.color.copy(0.64f),
-                shape = CircleShape
+                color = streak.moodType.color.copy(0.64f),
+                shape = RoundedCornerShape(
+                    topStartPercent = startPercent,
+                    bottomStartPercent = startPercent,
+                    topEndPercent = endPercent,
+                    bottomEndPercent = endPercent
+                )
             )
     )
 }

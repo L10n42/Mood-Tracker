@@ -7,29 +7,37 @@ class FindMoodStreaks {
 
     operator fun invoke(data: List<Mood?>): List<MoodStreak> {
         val streaks = mutableListOf<MoodStreak>()
+        val edges = (1 until data.size / 7).map { it * 7 - 1 }
 
-        for (start in data.indices step 7) {
-            val end = minOf(start + 7, data.size)
+        var streakStart = -1
+        var isOpen = false
 
-            var streakStart = -1
-            for (i in start until end - 1) {
-                val today = data[i]
-                val tomorrow = data[i + 1]
-                if (today != null && tomorrow != null && today.type == tomorrow.type) {
-                    if (streakStart == -1) {
-                        streakStart = i
-                    }
-                } else if (streakStart != -1) {
-                    val streak = MoodStreak(streakStart to i, data[streakStart]!!.type)
-                    streaks.add(streak)
-                    streakStart = -1
+        for (i in data.indices) {
+            val today = data.getOrNull(i)
+            val tomorrow = data.getOrNull(i + 1)
+
+            if (today != null && tomorrow != null && today.type == tomorrow.type) {
+                if (streakStart == -1) {
+                    streakStart = i
                 }
-            }
 
-            if (streakStart != -1 && streakStart != end - 1) {
-                val streak = MoodStreak(streakStart to end - 1, data[streakStart]!!.type)
+                if (i in edges) {
+                    val streak = MoodStreak(streakStart to i, data[streakStart]!!.type, isOpen = isOpen, isClose = true)
+                    streaks.add(streak)
+                    streakStart = i + 1
+                    isOpen = true
+                }
+            } else if (streakStart != -1) {
+                val streak = MoodStreak(streakStart to i, data[streakStart]!!.type, isOpen = isOpen)
                 streaks.add(streak)
+                streakStart = -1
+                isOpen = false
             }
+        }
+
+        if (streakStart != -1 && streakStart != data.lastIndex) {
+            val streak = MoodStreak(streakStart to data.lastIndex, data[streakStart]!!.type, isOpen = isOpen)
+            streaks.add(streak)
         }
 
         return streaks
