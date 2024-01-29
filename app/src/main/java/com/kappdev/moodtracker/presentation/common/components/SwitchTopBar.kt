@@ -40,6 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.domain.util.getMonthName
 import com.kappdev.moodtracker.domain.util.isCurrentYear
+import com.kappdev.moodtracker.domain.util.minusMonth
+import com.kappdev.moodtracker.domain.util.minusWeek
+import com.kappdev.moodtracker.domain.util.nextMonthEnabled
+import com.kappdev.moodtracker.domain.util.plusMonth
+import com.kappdev.moodtracker.domain.util.plusWeek
 import com.kappdev.moodtracker.domain.util.sameMonthWith
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -157,11 +162,6 @@ private fun BasicSwitchTopBar(
     }
 }
 
-private fun LocalDate.nextMonthEnabled(): Boolean {
-    val now = LocalDate.now()
-    return this.year < now.year || (this.year == now.year && this.month < now.month)
-}
-
 @Composable
 private fun SwitchButton(
     icon: ImageVector,
@@ -242,9 +242,3 @@ private fun DateTitle(
         color = MaterialTheme.colorScheme.onSurface
     )
 }
-
-private fun LocalDate.plusMonth() = this.plusMonths(1)
-private fun LocalDate.minusMonth() = this.minusMonths(1)
-
-private fun LocalDate.plusWeek() = this.plusWeeks(1)
-private fun LocalDate.minusWeek() = this.minusWeeks(1)

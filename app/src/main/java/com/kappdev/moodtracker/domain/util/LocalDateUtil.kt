@@ -23,3 +23,14 @@ fun LocalDate.sameMonthWith(date: LocalDate): Boolean {
 fun LocalDate.isCurrentYear(): Boolean {
     return (this.year == LocalDate.now().year)
 }
+
+fun LocalDate.plusMonth() = this.plusMonths(1)
+fun LocalDate.minusMonth() = this.minusMonths(1)
+
+fun LocalDate.plusWeek() = this.plusWeeks(1)
+fun LocalDate.minusWeek() = this.minusWeeks(1)
+
+fun LocalDate.nextMonthEnabled(): Boolean {
+    val now = LocalDate.now()
+    return this.year < now.year || (this.year == now.year && this.month < now.month)
+}
