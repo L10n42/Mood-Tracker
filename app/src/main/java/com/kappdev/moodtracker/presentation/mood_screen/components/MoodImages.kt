@@ -106,20 +106,36 @@ private fun ImageCard(
         SubcomposeAsyncImage(
             model = image.model,
             contentDescription = null,
-            modifier = modifier.clip(shape).clickable(onClick = onOverview),
+            modifier = modifier
+                .clip(shape)
+                .clickable(onClick = onOverview),
             contentScale = ContentScale.Crop,
             loading = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(42.dp)
-                )
+                Box(
+                    modifier = Modifier.matchParentSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .aspectRatio(1f)
+                    )
+                }
             },
             error = {
-                Icon(
-                    imageVector = Icons.Rounded.ErrorOutline,
-                    tint = MaterialTheme.colorScheme.error,
-                    contentDescription = "Image loading error icon",
-                    modifier = Modifier.size(32.dp)
-                )
+                Box(
+                    modifier = Modifier.matchParentSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.ErrorOutline,
+                        tint = MaterialTheme.colorScheme.error,
+                        contentDescription = "Image loading error icon",
+                        modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .aspectRatio(1f)
+                    )
+                }
             }
         )
 
