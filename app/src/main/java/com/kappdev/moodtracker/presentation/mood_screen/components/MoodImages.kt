@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -147,13 +148,13 @@ private fun ImageCard(
             ),
             modifier = Modifier
                 .padding(8.dp)
-                .size(18.dp)
+                .size(24.dp)
                 .align(Alignment.TopEnd)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Close,
                 contentDescription = "Delete image icon",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.fillMaxSize(0.8f)
             )
         }
     }
