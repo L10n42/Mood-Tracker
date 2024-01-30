@@ -24,6 +24,7 @@
     <string name="btn_discard">Discard</string>
     <string name="unsaved_changes_title">Unsaved changes</string>
     <string name="unsaved_changes_msg">It looks like you\'ve made changes. Would you like to save them before leaving?</string>
+    <string name="delete_warning_msg">Are you sure you want to delete data on %1$s?</string>
     <string name="btn_keep">Keep</string>
     <string name="btn_delete">Delete</string>
     <string name="delete_photo_title">Delete Photo</string>
@@ -50,6 +51,11 @@
     <string name="delete">Delete</string>
     <string name="empty_note">Note is empty</string>
     <string name="copied">Copied</string>
+    <string name="deleting_images">Deleting images</string>
+    <string name="deleting_data">Deleting data</string>
+    <string name="delete_mood_error">Couldn\'t delete mood</string>
+    <string name="no_mood_data">Couldn\'t find the data</string>
+    <string name="nothing_to_delete">Nothing to delete</string>
 
     <string-array name="week_days">
         <item>Mon</item>

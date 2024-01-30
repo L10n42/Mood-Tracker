@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,7 @@ import com.kappdev.moodtracker.presentation.mood_screen.MoodOption
 import com.kappdev.moodtracker.presentation.mood_screen.MoodScreenViewModel
 import java.io.File
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun MoodScreen(
@@ -43,6 +45,7 @@ fun MoodScreen(
 ) {
     val scrollState = rememberScrollState()
     val saveDialogState = rememberMutableDialogState(null)
+    val deleteDialogState = rememberMutableDialogState<LocalDate?>(null)
 
     LaunchedEffect(date) {
         viewModel.changeDate(date)
@@ -50,6 +53,18 @@ fun MoodScreen(
     }
 
     LoadingDialog(viewModel.loadingDialogState)
+
+    if (deleteDialogState.isVisible.value) {
+        deleteDialogState.dialogData.value?.let { dialogDate ->
+            DeleteDialog(
+                date = dialogDate,
+                onDismiss = deleteDialogState::hideDialog,
+                onConfirm = {
+                    viewModel.deleteMood(onBack)
+                }
+            )
+        }
+    }
 
     if (saveDialogState.isVisible.value) {
         UnsavedChangesDialog(
@@ -90,11 +105,16 @@ fun MoodScreen(
             ) {
                 MoodTopBar(
                     date = viewModel.date,
-                    onOptionClick = { clickedOption ->
+                    onOptionClick = { hidePopup, clickedOption ->
                         when (clickedOption) {
                             MoodOption.CopyNote -> viewModel.copyNote()
-                            MoodOption.Delete -> {}
+                            MoodOption.Delete -> {
+                                if (viewModel.canDeleteMood()) {
+                                    deleteDialogState.showDialog(viewModel.getOriginalDate())
+                                }
+                            }
                         }
+                        hidePopup()
                     },
                     onBack = {
                         when {
@@ -179,6 +199,23 @@ fun MoodScreen(
 fun Context.createImageFile(): File {
     val imageFileName = "IMG_${System.currentTimeMillis()}"
     return File.createTempFile(imageFileName, ".jpg", externalCacheDir)
+}
+
+@Composable
+private fun DeleteDialog(
+    date: LocalDate,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    val formatter = remember { DateTimeFormatter.ofPattern("MMMM dd, yyyy") }
+
+    CustomAlertDialog(
+        title = stringResource(R.string.delete),
+        text = stringResource(R.string.delete_warning_msg, date.format(formatter)),
+        confirmText = stringResource(R.string.btn_delete),
+        onDismiss = onDismiss,
+        onConfirm = onConfirm
+    )
 }
 
 @Composable

@@ -28,10 +28,11 @@ import java.time.LocalDate
 @Composable
 fun MoodTopBar(
     date: LocalDate?,
-    onOptionClick: (MoodOption) -> Unit,
+    onOptionClick: (hidePopup: () -> Unit, MoodOption) -> Unit,
     onBack: () -> Unit
 ) {
     var isOptionsVisible by remember { mutableStateOf(false) }
+    val hidePopup = { isOptionsVisible = false }
 
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -69,9 +70,9 @@ fun MoodTopBar(
             }
             MoodOptionsPopup(
                 isVisible = isOptionsVisible,
-                onClick = onOptionClick,
-                onDismiss = {
-                    isOptionsVisible = false
+                onDismiss = hidePopup,
+                onClick = {
+                    onOptionClick(hidePopup, it)
                 }
             )
         }

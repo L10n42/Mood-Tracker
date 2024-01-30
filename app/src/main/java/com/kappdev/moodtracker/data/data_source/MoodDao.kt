@@ -19,4 +19,7 @@ interface MoodDao {
     @Query("SELECT * FROM moods WHERE date BETWEEN :start AND :end")
     fun getMoodsFor(start: LocalDate, end: LocalDate): List<Mood>
 
+    @Query("DELETE FROM moods WHERE date = :date")
+    fun deleteByDate(date: LocalDate): Int
+
 }

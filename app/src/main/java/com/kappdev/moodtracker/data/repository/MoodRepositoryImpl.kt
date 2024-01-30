@@ -22,4 +22,8 @@ class MoodRepositoryImpl @Inject constructor(
         return moodDao.getMoodsFor(start, end)
     }
 
+    override fun deleteByDate(date: LocalDate): Int {
+        return moodDao.deleteByDate(date)
+    }
+
 }

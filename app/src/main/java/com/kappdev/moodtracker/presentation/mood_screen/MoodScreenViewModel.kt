@@ -7,10 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.model.Image
 import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.CopyNote
+import com.kappdev.moodtracker.domain.use_case.DeleteMood
 import com.kappdev.moodtracker.domain.use_case.GetMoodByDate
 import com.kappdev.moodtracker.domain.use_case.InsertMood
 import com.kappdev.moodtracker.domain.use_case.ShareImage
@@ -31,6 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MoodScreenViewModel @Inject constructor(
     private val insertMood: InsertMood,
+    private val deleteMood: DeleteMood,
     private val shareImage: ShareImage,
     private val getMoodByDate: GetMoodByDate,
     private val copyNote: CopyNote,
@@ -65,6 +68,24 @@ class MoodScreenViewModel @Inject constructor(
                         if (resultState.exception !is StoreImageException) {
                             _loadingDialogState.hideDialog()
                         }
+                        resultState.exception.message?.let(toaster::show)
+                    }
+                    is ResultState.Success -> withContext(Dispatchers.Main) {
+                        _loadingDialogState.hideDialog()
+                        onSuccess()
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteMood(onSuccess: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteMood(originalMood).collect { resultState ->
+                when (resultState) {
+                    is ResultState.Loading -> _loadingDialogState.showDialog(resultState.message)
+                    is ResultState.Failure -> withContext(Dispatchers.Main) {
+                        _loadingDialogState.hideDialog()
                         resultState.exception.message?.let(toaster::show)
                     }
                     is ResultState.Success -> withContext(Dispatchers.Main) {
@@ -146,4 +167,15 @@ class MoodScreenViewModel @Inject constructor(
     }
 
     fun copyNote() = copyNote(note)
+
+    fun getOriginalDate() = originalMood?.date
+
+    fun canDeleteMood(): Boolean {
+        return if (originalMood != null) {
+            true
+        } else {
+            toaster.show(R.string.nothing_to_delete)
+            false
+        }
+    }
 }

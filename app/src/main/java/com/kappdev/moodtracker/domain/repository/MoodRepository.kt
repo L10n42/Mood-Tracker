@@ -10,4 +10,6 @@ interface MoodRepository {
     fun getMoodByDate(date: LocalDate): Mood?
 
     fun getMoodsFor(start: LocalDate, end: LocalDate): List<Mood>
+
+    fun deleteByDate(date: LocalDate): Int
 }
