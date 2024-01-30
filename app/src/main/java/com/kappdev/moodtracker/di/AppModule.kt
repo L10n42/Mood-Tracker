@@ -11,9 +11,11 @@ import com.kappdev.moodtracker.data.repository.SettingsManagerImpl
 import com.kappdev.moodtracker.domain.repository.MoodRepository
 import com.kappdev.moodtracker.domain.repository.ReminderManager
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.use_case.CopyNote
 import com.kappdev.moodtracker.domain.use_case.RateTheApp
 import com.kappdev.moodtracker.domain.use_case.ShareImage
 import com.kappdev.moodtracker.domain.use_case.StoreImage
+import com.kappdev.moodtracker.domain.util.Toaster
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,6 +60,12 @@ object AppModule {
     @Singleton
     fun provideRateTheApp(app: Application): RateTheApp {
         return RateTheApp(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCopyNote(app: Application, toaster: Toaster): CopyNote {
+        return CopyNote(app, toaster)
     }
 
     @Provides

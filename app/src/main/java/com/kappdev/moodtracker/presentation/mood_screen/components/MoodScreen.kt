@@ -30,6 +30,7 @@ import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.LoadingDialog
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
 import com.kappdev.moodtracker.presentation.common.rememberMutableDialogState
+import com.kappdev.moodtracker.presentation.mood_screen.MoodOption
 import com.kappdev.moodtracker.presentation.mood_screen.MoodScreenViewModel
 import java.io.File
 import java.time.LocalDate
@@ -89,6 +90,12 @@ fun MoodScreen(
             ) {
                 MoodTopBar(
                     date = viewModel.date,
+                    onOptionClick = { clickedOption ->
+                        when (clickedOption) {
+                            MoodOption.CopyNote -> viewModel.copyNote()
+                            MoodOption.Delete -> {}
+                        }
+                    },
                     onBack = {
                         when {
                             viewModel.hasUnsavedChanges() -> saveDialogState.showDialog()

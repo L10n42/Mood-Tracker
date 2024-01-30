@@ -1,7 +1,6 @@
 package com.kappdev.moodtracker.presentation.mood_screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.kappdev.moodtracker.domain.model.Image
 import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodType
+import com.kappdev.moodtracker.domain.use_case.CopyNote
 import com.kappdev.moodtracker.domain.use_case.GetMoodByDate
 import com.kappdev.moodtracker.domain.use_case.InsertMood
 import com.kappdev.moodtracker.domain.use_case.ShareImage
@@ -33,6 +33,7 @@ class MoodScreenViewModel @Inject constructor(
     private val insertMood: InsertMood,
     private val shareImage: ShareImage,
     private val getMoodByDate: GetMoodByDate,
+    private val copyNote: CopyNote,
     private val toaster: Toaster
 ) : ViewModel() {
     private var originalMood: Mood? = null
@@ -143,4 +144,6 @@ class MoodScreenViewModel @Inject constructor(
         }
         _images.remove(image)
     }
+
+    fun copyNote() = copyNote(note)
 }

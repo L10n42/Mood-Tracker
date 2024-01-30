@@ -46,6 +46,10 @@
     <string name="btn_grant">Grant</string>
     <string name="btn_deny">Deny</string>
     <string name="share_image_title">Share Via</string>
+    <string name="copy_note">Copy note</string>
+    <string name="delete">Delete</string>
+    <string name="empty_note">Note is empty</string>
+    <string name="copied">Copied</string>
 
     <string-array name="week_days">
         <item>Mon</item>
