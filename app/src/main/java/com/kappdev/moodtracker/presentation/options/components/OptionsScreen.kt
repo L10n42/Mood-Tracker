@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.Contrast
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -188,6 +189,18 @@ fun OptionsScreen(
                     subTitle = stringResource(mainScreen.titleRes),
                     onClick = {
                         mainScreenDialog.showDialog(mainScreen)
+                    }
+                )
+            }
+
+            VerticalSpace(16.dp)
+
+            ItemsGroup {
+                Item(
+                    title = stringResource(R.string.rate_the_app_option),
+                    icon = Icons.Rounded.Star,
+                    onClick = {
+                        viewModel.rateTheApp.launch()
                     }
                 )
             }

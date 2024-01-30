@@ -11,13 +11,13 @@ import com.kappdev.moodtracker.data.repository.SettingsManagerImpl
 import com.kappdev.moodtracker.domain.repository.MoodRepository
 import com.kappdev.moodtracker.domain.repository.ReminderManager
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.use_case.RateTheApp
 import com.kappdev.moodtracker.domain.use_case.ShareImage
 import com.kappdev.moodtracker.domain.use_case.StoreImage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -52,6 +52,12 @@ object AppModule {
     @Singleton
     fun provideShareImage(app: Application): ShareImage {
         return ShareImage(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRateTheApp(app: Application): RateTheApp {
+        return RateTheApp(app)
     }
 
     @Provides
