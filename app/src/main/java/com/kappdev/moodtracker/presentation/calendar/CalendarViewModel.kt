@@ -13,9 +13,9 @@ import com.kappdev.moodtracker.domain.use_case.GetCalendarData
 import com.kappdev.moodtracker.domain.use_case.GetCalendarMonth
 import com.kappdev.moodtracker.domain.util.Toaster
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -54,12 +54,12 @@ class CalendarViewModel @Inject constructor(
 
     private fun updateCalendarData() {
         calendarJob?.cancel()
-        calendarJob = viewModelScope.launch(Dispatchers.IO) {
+        calendarJob = getCalendarData(calendarMonth).onEach { newData ->
             calendarState = CalendarState.LOADING
-            data = getCalendarData(calendarMonth)
+            data = newData
             findMoodStreaks()
             calendarState = CalendarState.READY
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun ifDateIsValid(date: LocalDate, block: () -> Unit) {

@@ -9,9 +9,9 @@ import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.domain.use_case.GetMonthChartData
 import com.kappdev.moodtracker.domain.use_case.GetWeekChartData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -49,12 +49,18 @@ class MoodChartScreenViewModel @Inject constructor(
 
     private fun updateChartData() {
         chartDataJob?.cancel()
-        chartDataJob = viewModelScope.launch(Dispatchers.IO) {
-            data = when (chartType) {
-                ChartType.MONTH -> getMonthChartData(currentDate)
-                ChartType.WEEK -> getWeekChartData(currentDate)
+        chartDataJob = when (chartType) {
+            ChartType.MONTH -> {
+                getMonthChartData(currentDate).onEach(::updateData).launchIn(viewModelScope)
+            }
+            ChartType.WEEK -> {
+                getWeekChartData(currentDate).onEach(::updateData).launchIn(viewModelScope)
             }
         }
+    }
+
+    private fun updateData(newData: Map<Int, MoodType?>) {
+        this.data = newData
     }
 
     private fun resetDate() {

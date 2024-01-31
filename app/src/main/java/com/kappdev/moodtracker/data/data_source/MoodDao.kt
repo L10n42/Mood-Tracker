@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.kappdev.moodtracker.domain.model.Mood
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 @Dao
@@ -17,7 +18,7 @@ interface MoodDao {
     fun getMoodByDate(date: LocalDate): Mood?
 
     @Query("SELECT * FROM moods WHERE date BETWEEN :start AND :end")
-    fun getMoodsFor(start: LocalDate, end: LocalDate): List<Mood>
+    fun getMoodsFor(start: LocalDate, end: LocalDate): Flow<List<Mood>>
 
     @Query("DELETE FROM moods WHERE date = :date")
     fun deleteByDate(date: LocalDate): Int
