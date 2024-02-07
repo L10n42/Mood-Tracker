@@ -1,10 +1,14 @@
 package com.kappdev.moodtracker.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.kappdev.moodtracker.domain.model.Quote
+import com.kappdev.moodtracker.domain.model.QuoteBlock
 import com.kappdev.moodtracker.domain.repository.SettingsManager
+import com.kappdev.moodtracker.domain.util.Settings
 import com.kappdev.moodtracker.presentation.calendar.components.CalendarScreen
 import com.kappdev.moodtracker.presentation.mood_chart.components.MoodChartScreen
 import com.kappdev.moodtracker.presentation.mood_screen.components.MoodScreen
@@ -16,7 +20,9 @@ fun SetupNavGraph(
     navController: NavHostController,
     startDestination: String,
     settings: SettingsManager,
-    isReminderIntent: Boolean
+    isReminderIntent: Boolean,
+    dailyQuote: Quote?,
+    quoteBlock: QuoteBlock?
 ) {
     NavHost(
         navController = navController,
@@ -34,7 +40,7 @@ fun SetupNavGraph(
             popEnterTransition = { slideInRight() },
             popExitTransition = { slideOutRight() }
         ) {
-            CalendarScreen(navController)
+            CalendarScreen(navController, quoteBlock, dailyQuote)
         }
 
         composable(
@@ -64,7 +70,7 @@ fun SetupNavGraph(
             popEnterTransition = { slideInRight() },
             popExitTransition = { slideOutRight() }
         ) {
-            MoodChartScreen(navController)
+            MoodChartScreen(navController, quoteBlock, dailyQuote)
         }
 
         composable(

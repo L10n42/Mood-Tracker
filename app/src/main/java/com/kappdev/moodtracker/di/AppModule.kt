@@ -6,12 +6,16 @@ import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.kappdev.moodtracker.data.data_source.MoodDatabase
 import com.kappdev.moodtracker.data.repository.MoodRepositoryImpl
+import com.kappdev.moodtracker.data.repository.QuoteManagerImpl
 import com.kappdev.moodtracker.data.repository.ReminderManagerImpl
 import com.kappdev.moodtracker.data.repository.SettingsManagerImpl
 import com.kappdev.moodtracker.domain.repository.MoodRepository
+import com.kappdev.moodtracker.domain.repository.QuoteManager
 import com.kappdev.moodtracker.domain.repository.ReminderManager
 import com.kappdev.moodtracker.domain.repository.SettingsManager
 import com.kappdev.moodtracker.domain.use_case.CopyNote
+import com.kappdev.moodtracker.domain.use_case.CopyQuote
+import com.kappdev.moodtracker.domain.use_case.GetRandomQuote
 import com.kappdev.moodtracker.domain.use_case.RateTheApp
 import com.kappdev.moodtracker.domain.use_case.ShareImage
 import com.kappdev.moodtracker.domain.use_case.StoreImage
@@ -66,6 +70,24 @@ object AppModule {
     @Singleton
     fun provideCopyNote(app: Application, toaster: Toaster): CopyNote {
         return CopyNote(app, toaster)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCopyQuote(app: Application, toaster: Toaster): CopyQuote {
+        return CopyQuote(app, toaster)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetRandomQuote(app: Application): GetRandomQuote {
+        return GetRandomQuote(app.resources)
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuoteManage(app: Application, getRandomQuote: GetRandomQuote): QuoteManager {
+        return QuoteManagerImpl(app, getRandomQuote)
     }
 
     @Provides

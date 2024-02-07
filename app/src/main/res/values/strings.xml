@@ -10,7 +10,7 @@
     <string name="btn_take_photo">Take photo</string>
     <string name="btn_from_gallery">From gallery</string>
     <string name="photo_title">Photo</string>
-    <string name="note_hint">Write a note...</string>
+    <string name="note_hint">Write a note…</string>
     <string name="btn_done">Done</string>
     <string name="month_title">Month</string>
     <string name="week_title">Week</string>
@@ -33,7 +33,9 @@
     <string name="screen_mood_chart">Mood chart</string>
     <string name="select_color_mode">Select color mode</string>
     <string name="select_main_screen">Select main screen</string>
+    <string name="display_quote_block">Display quote</string>
     <string name="main_screen_option">Main screen</string>
+    <string name="quote_block_option">Quote</string>
     <string name="rate_the_app_option">Rate the App</string>
     <string name="color_mode_option">Color mode</string>
     <string name="reminder_option">Reminder</string>
@@ -56,6 +58,10 @@
     <string name="delete_mood_error">Couldn\'t delete mood</string>
     <string name="no_mood_data">Couldn\'t find the data</string>
     <string name="nothing_to_delete">Nothing to delete</string>
+    <string name="quote_block_calendar_and_chart">On Calendar &amp; Chart Screens</string>
+    <string name="quote_block_calendar">On Calendar Screen</string>
+    <string name="quote_block_chart">On Chart Screen</string>
+    <string name="disabled">Disabled</string>
 
     <string-array name="week_days">
         <item>Mon</item>

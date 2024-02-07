@@ -20,9 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kappdev.moodtracker.R
+import com.kappdev.moodtracker.domain.model.Quote
+import com.kappdev.moodtracker.domain.model.QuoteBlock
 import com.kappdev.moodtracker.presentation.common.components.ActionButton
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
+import com.kappdev.moodtracker.presentation.common.components.QuoteBlock
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
 import com.kappdev.moodtracker.presentation.common.components.WeekSwitchTopBar
 import com.kappdev.moodtracker.presentation.mood_chart.ChartType
@@ -35,6 +38,8 @@ import java.time.LocalDate
 @Composable
 fun MoodChartScreen(
     navController: NavHostController,
+    quoteBlock: QuoteBlock?,
+    dailyQuote: Quote?,
     viewModel: MoodChartScreenViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -82,7 +87,19 @@ fun MoodChartScreen(
                 onSelect = viewModel::changeChartType
             )
 
-            VerticalSpace(32.dp)
+            if (dailyQuote != null && quoteBlock?.onChartScreen == true) {
+                QuoteBlock(
+                    quote = dailyQuote,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 32.dp),
+                    onClick = {
+                        viewModel.copyQuote(dailyQuote)
+                    }
+                )
+            } else {
+                VerticalSpace(32.dp)
+            }
 
             ActionButton(
                 title = stringResource(R.string.today_mood_question),

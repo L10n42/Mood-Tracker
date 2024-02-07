@@ -19,10 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kappdev.moodtracker.R
+import com.kappdev.moodtracker.domain.model.Quote
+import com.kappdev.moodtracker.domain.model.QuoteBlock
 import com.kappdev.moodtracker.presentation.calendar.CalendarViewModel
 import com.kappdev.moodtracker.presentation.common.components.ActionButton
 import com.kappdev.moodtracker.presentation.common.components.DividedContent
 import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
+import com.kappdev.moodtracker.presentation.common.components.QuoteBlock
 import com.kappdev.moodtracker.presentation.navigation.NavConst
 import com.kappdev.moodtracker.presentation.navigation.Screen
 import com.kappdev.moodtracker.presentation.navigation.navigateWithValue
@@ -31,6 +34,8 @@ import java.time.LocalDate
 @Composable
 fun CalendarScreen(
     navController: NavHostController,
+    quoteBlock: QuoteBlock?,
+    dailyQuote: Quote?,
     viewModel: CalendarViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -58,9 +63,12 @@ fun CalendarScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             CalendarView(
                 viewModel = viewModel,
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 onDateClick = { date ->
                     viewModel.ifDateIsValid(date) {
                         navController.navigateWithValue(
@@ -71,6 +79,18 @@ fun CalendarScreen(
                     }
                 }
             )
+
+            if (dailyQuote != null && quoteBlock?.onCalendarScreen == true) {
+                QuoteBlock(
+                    quote = dailyQuote,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    onClick = {
+                        viewModel.copyQuote(dailyQuote)
+                    }
+                )
+            }
 
             val actionButtonModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
 

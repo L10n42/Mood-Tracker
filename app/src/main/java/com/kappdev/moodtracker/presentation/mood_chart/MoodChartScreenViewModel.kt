@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kappdev.moodtracker.domain.model.MoodType
+import com.kappdev.moodtracker.domain.use_case.CopyQuote
 import com.kappdev.moodtracker.domain.use_case.GetMonthChartData
 import com.kappdev.moodtracker.domain.use_case.GetWeekChartData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MoodChartScreenViewModel @Inject constructor(
     private val getMonthChartData: GetMonthChartData,
-    private val getWeekChartData: GetWeekChartData
+    private val getWeekChartData: GetWeekChartData,
+    val copyQuote: CopyQuote
 ) : ViewModel() {
 
     var chartType by mutableStateOf(ChartType.WEEK)

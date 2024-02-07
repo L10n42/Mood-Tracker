@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.model.Mood
 import com.kappdev.moodtracker.domain.model.MoodStreak
+import com.kappdev.moodtracker.domain.repository.QuoteManager
+import com.kappdev.moodtracker.domain.use_case.CopyQuote
 import com.kappdev.moodtracker.domain.use_case.FindMoodStreaks
 import com.kappdev.moodtracker.domain.use_case.GetCalendarData
 import com.kappdev.moodtracker.domain.use_case.GetCalendarMonth
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     private val getCalendarData: GetCalendarData,
-    private val toaster: Toaster
+    private val toaster: Toaster,
+    val copyQuote: CopyQuote
 ) : ViewModel() {
 
     var calendarState by mutableStateOf(CalendarState.IDLE)

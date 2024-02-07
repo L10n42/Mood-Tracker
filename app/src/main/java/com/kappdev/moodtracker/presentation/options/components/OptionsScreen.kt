@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Contrast
+import androidx.compose.material.icons.rounded.FormatQuote
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Schedule
@@ -50,6 +51,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kappdev.moodtracker.R
+import com.kappdev.moodtracker.domain.model.getTitle
 import com.kappdev.moodtracker.domain.repository.SettingsManager
 import com.kappdev.moodtracker.domain.util.Settings
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
@@ -71,9 +73,11 @@ fun OptionsScreen(
     val theme by settings.getValueAsState(Settings.Theme)
     val mainScreen by settings.getValueAsState(Settings.MainScreen)
     val remainder by settings.getValueAsState(Settings.Reminder)
+    val quoteBlock by settings.getValueAsState(Settings.QuoteBlock)
 
     val themeDialogState = rememberMutableDialogState(initialData = theme)
     val mainScreenDialog = rememberMutableDialogState(initialData = mainScreen)
+    val quoteBlockDialog = rememberMutableDialogState(initialData = quoteBlock)
     val permissionDialog = rememberMutableDialogState(initialData = Unit)
 
     fun manageSettings(block: suspend SettingsManager.() -> Unit) {
@@ -97,6 +101,10 @@ fun OptionsScreen(
             onDismiss = permissionDialog::hideDialog,
             onGrant = { context.openExactAlarmSettingPage() }
         )
+    }
+
+    QuoteBlockDialog(quoteBlockDialog) { newQuoteBlock ->
+        manageSettings { setValueTo(Settings.QuoteBlock, newQuoteBlock) }
     }
 
     MainScreenDialog(
@@ -189,6 +197,14 @@ fun OptionsScreen(
                     subTitle = stringResource(mainScreen.titleRes),
                     onClick = {
                         mainScreenDialog.showDialog(mainScreen)
+                    }
+                )
+                Item(
+                    title = stringResource(R.string.quote_block_option),
+                    icon = Icons.Rounded.FormatQuote,
+                    subTitle = quoteBlock.getTitle(context),
+                    onClick = {
+                        quoteBlockDialog.showDialog(quoteBlock)
                     }
                 )
             }

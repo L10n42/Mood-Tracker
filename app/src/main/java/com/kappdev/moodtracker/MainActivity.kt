@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,20 +13,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.kappdev.moodtracker.data.receiver.ReminderReceiver
+import com.kappdev.moodtracker.domain.model.Quote
+import com.kappdev.moodtracker.domain.model.QuoteBlock
+import com.kappdev.moodtracker.domain.repository.QuoteManager
 import com.kappdev.moodtracker.domain.repository.SettingsManager
 import com.kappdev.moodtracker.domain.util.MainScreen
 import com.kappdev.moodtracker.domain.util.Settings
 import com.kappdev.moodtracker.domain.util.Theme
-import com.kappdev.moodtracker.presentation.navigation.NavConst
-import com.kappdev.moodtracker.presentation.navigation.Screen
 import com.kappdev.moodtracker.presentation.navigation.SetupNavGraph
-import com.kappdev.moodtracker.presentation.navigation.navigateWithValue
 import com.kappdev.moodtracker.ui.theme.MoodTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,10 +35,15 @@ class MainActivity : ComponentActivity() {
     lateinit var settings: SettingsManager
 
     @Inject
+    lateinit var quoteManager: QuoteManager
+
+    @Inject
     lateinit var notificationManager: NotificationManager
 
     private var theme by mutableStateOf<Theme?>(null)
+    private var quoteBlock by mutableStateOf<QuoteBlock?>(null)
     private var mainScreen by mutableStateOf<MainScreen?>(null)
+    private var dailyQuote by mutableStateOf<Quote?>(null)
     private var isReminderIntent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +54,11 @@ class MainActivity : ComponentActivity() {
             notificationManager.cancel(ReminderReceiver.NOTIFICATION_ID)
         }
 
+        updateQuoteIfNeed()
+        launchQuote()
         launchThemeListener()
         launchMainScreenListener()
+        launchQuoteBlockListener()
 
         setContent {
             ifDataValid { validTheme, validMainScreen ->
@@ -65,8 +71,37 @@ class MainActivity : ComponentActivity() {
                         systemUiController.setSystemBarsColor(backgroundColor)
                     }
 
-                    SetupNavGraph(navController, validMainScreen.route, settings, isReminderIntent)
+                    SetupNavGraph(
+                        navController = navController,
+                        startDestination = validMainScreen.route,
+                        settings = settings,
+                        isReminderIntent = isReminderIntent,
+                        dailyQuote = dailyQuote,
+                        quoteBlock = quoteBlock
+                    )
                 }
+            }
+        }
+    }
+
+    private fun updateQuoteIfNeed() {
+        lifecycleScope.launch {
+            if (quoteManager.needUpdate()) {
+                quoteManager.updateQuote()
+            }
+        }
+    }
+
+    private fun launchQuote() {
+        lifecycleScope.launch {
+            quoteManager.getQuoteFlow().collectLatest { dailyQuote = it }
+        }
+    }
+
+    private fun launchQuoteBlockListener() {
+        lifecycleScope.launch {
+            settings.getValueFlow(Settings.QuoteBlock).collectLatest { quoteBlock ->
+                this@MainActivity.quoteBlock = quoteBlock
             }
         }
     }
