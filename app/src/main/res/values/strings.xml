@@ -62,6 +62,9 @@
     <string name="quote_block_calendar">On Calendar Screen</string>
     <string name="quote_block_chart">On Chart Screen</string>
     <string name="disabled">Disabled</string>
+    <string name="msg_invalid_chart">Chart requires at least 2 entries.</string>
+    <string name="chart_type_line">Line</string>
+    <string name="chart_type_bars">Bars</string>
 
     <string-array name="week_days">
         <item>Mon</item>

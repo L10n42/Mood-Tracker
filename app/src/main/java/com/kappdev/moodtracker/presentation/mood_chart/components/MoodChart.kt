@@ -49,13 +49,13 @@ import com.kappdev.moodtracker.R
 import com.kappdev.moodtracker.domain.model.MoodType
 import com.kappdev.moodtracker.presentation.common.components.HorizontalSpace
 import com.kappdev.moodtracker.presentation.common.components.convexEffect
-import com.kappdev.moodtracker.presentation.mood_chart.ChartType
+import com.kappdev.moodtracker.presentation.mood_chart.ChartFrame
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MoodChart(
     data: Map<Int, MoodType?>,
-    chartType: ChartType,
+    chartFrame: ChartFrame,
     modifier: Modifier = Modifier
 ) {
     val weekDays = stringArrayResource(R.array.week_days)
@@ -89,9 +89,9 @@ fun MoodChart(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(data.toList()) { (day, mood) ->
-                val label = when (chartType) {
-                    ChartType.MONTH -> day.toString()
-                    ChartType.WEEK -> weekDays[day - 1]
+                val label = when (chartFrame) {
+                    ChartFrame.MONTH -> day.toString()
+                    ChartFrame.WEEK -> weekDays[day - 1]
                 }
                 ChartBar(
                     mood = mood,

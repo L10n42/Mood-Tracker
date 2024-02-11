@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kappdev.moodtracker.presentation.common.components.doubleInnerShadow
-import com.kappdev.moodtracker.presentation.common.components.innerShadow
+import com.kappdev.moodtracker.presentation.mood_chart.ChartFrame
 import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 
 @Composable
@@ -59,7 +59,7 @@ fun ChartTypeSwitcher(
             )
     ) {
         ChartType.values().forEach { type ->
-            TabItemView(
+            SwitchItem(
                 title = stringResource(type.titleRes),
                 isSelected = (type == selected),
                 onClick = { onSelect(type) }
@@ -69,7 +69,35 @@ fun ChartTypeSwitcher(
 }
 
 @Composable
-private fun TabItemView(
+fun ChartFrameSwitcher(
+    selected: ChartFrame,
+    modifier: Modifier = Modifier,
+    onSelect: (newType: ChartFrame) -> Unit
+) {
+    ChartTypeSwitcherLayout(
+        selectedTabPosition = selected.ordinal,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface, CircleShape)
+            .doubleInnerShadow(
+                firstColor = Color.Black.copy(0.5f),
+                secondColor = Color.White.copy(0.5f),
+                shape = CircleShape,
+                offsetY = 1.dp,
+                offsetX = 1.dp
+            )
+    ) {
+        ChartFrame.values().forEach { type ->
+            SwitchItem(
+                title = stringResource(type.titleRes),
+                isSelected = (type == selected),
+                onClick = { onSelect(type) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun SwitchItem(
     title: String,
     isSelected: Boolean,
     onClick: () -> Unit

@@ -23,7 +23,10 @@ class MoodChartScreenViewModel @Inject constructor(
     val copyQuote: CopyQuote
 ) : ViewModel() {
 
-    var chartType by mutableStateOf(ChartType.WEEK)
+    var chartFrame by mutableStateOf(ChartFrame.WEEK)
+        private set
+
+    var chartType by mutableStateOf(ChartType.LINE)
         private set
 
     var currentDate by mutableStateOf<LocalDate>(LocalDate.now())
@@ -45,17 +48,22 @@ class MoodChartScreenViewModel @Inject constructor(
 
     fun changeChartType(newType: ChartType) {
         chartType = newType
+        updateChartData()
+    }
+
+    fun changeChartFrame(newFrame: ChartFrame) {
+        chartFrame = newFrame
         resetDate()
         updateChartData()
     }
 
     private fun updateChartData() {
         chartDataJob?.cancel()
-        chartDataJob = when (chartType) {
-            ChartType.MONTH -> {
+        chartDataJob = when (chartFrame) {
+            ChartFrame.MONTH -> {
                 getMonthChartData(currentDate).onEach(::updateData).launchIn(viewModelScope)
             }
-            ChartType.WEEK -> {
+            ChartFrame.WEEK -> {
                 getWeekChartData(currentDate).onEach(::updateData).launchIn(viewModelScope)
             }
         }

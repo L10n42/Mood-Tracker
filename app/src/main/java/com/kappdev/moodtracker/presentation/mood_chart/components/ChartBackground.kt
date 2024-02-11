@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 fun Modifier.chartBackground(
     color: Color,
-    labelHeight: Dp,
+    labelHeight: Dp = 0.dp,
 ) = this.drawBehind {
     val gapHeight = ((this.size.height - labelHeight.toPx()) / 5)
 

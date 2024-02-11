@@ -1,6 +1,8 @@
 package com.kappdev.moodtracker.presentation.mood_chart.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +30,7 @@ import com.kappdev.moodtracker.presentation.common.components.MonthSwitchTopBar
 import com.kappdev.moodtracker.presentation.common.components.QuoteBlock
 import com.kappdev.moodtracker.presentation.common.components.VerticalSpace
 import com.kappdev.moodtracker.presentation.common.components.WeekSwitchTopBar
+import com.kappdev.moodtracker.presentation.mood_chart.ChartFrame
 import com.kappdev.moodtracker.presentation.mood_chart.ChartType
 import com.kappdev.moodtracker.presentation.mood_chart.MoodChartScreenViewModel
 import com.kappdev.moodtracker.presentation.navigation.NavConst
@@ -53,12 +56,12 @@ fun MoodChartScreen(
             DividedContent(
                 isDividerVisible = scrollState.canScrollBackward
             ) {
-                when (viewModel.chartType) {
-                    ChartType.MONTH -> MonthSwitchTopBar(
+                when (viewModel.chartFrame) {
+                    ChartFrame.MONTH -> MonthSwitchTopBar(
                         date = viewModel.currentDate,
                         onDateChange = viewModel::changeCurrentDate
                     )
-                    ChartType.WEEK -> WeekSwitchTopBar(
+                    ChartFrame.WEEK -> WeekSwitchTopBar(
                         date = viewModel.currentDate,
                         onDateChange = viewModel::changeCurrentDate
                     )
@@ -73,19 +76,40 @@ fun MoodChartScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MoodChart(
-                data = viewModel.data,
-                chartType = viewModel.chartType,
-                modifier = Modifier
-                    .height(280.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
+            val chartModifier = Modifier.height(280.dp).fillMaxWidth().padding(16.dp)
 
-            ChartTypeSwitcher(
-                selected = viewModel.chartType,
-                onSelect = viewModel::changeChartType
-            )
+            when (viewModel.chartType) {
+                ChartType.LINE -> {
+                    LineChart(
+                        data = viewModel.data,
+                        chartFrame = viewModel.chartFrame,
+                        modifier = chartModifier
+                    )
+                }
+                ChartType.BARS -> {
+                    MoodChart(
+                        data = viewModel.data,
+                        chartFrame = viewModel.chartFrame,
+                        modifier = chartModifier
+                    )
+                }
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            ) {
+                ChartTypeSwitcher(
+                    selected = viewModel.chartType,
+                    onSelect = viewModel::changeChartType
+                )
+
+                ChartFrameSwitcher(
+                    selected = viewModel.chartFrame,
+                    onSelect = viewModel::changeChartFrame
+                )
+            }
 
             if (dailyQuote != null && quoteBlock?.onChartScreen == true) {
                 QuoteBlock(
