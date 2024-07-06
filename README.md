@@ -1,6 +1,16 @@
 # Mood Tracker
-## Screenshots
-![Screenshot_2023-12-26-11-49-34-64_eb4585cfc68cc27f3e1715150b037bac](https://github.com/L10n42/Mood-Tracker/assets/108233306/11f12eed-a155-4e5e-9398-8e7a0344ae00)
-![Screenshot_2023-12-26-11-50-12-04_eb4585cfc68cc27f3e1715150b037bac](https://github.com/L10n42/Mood-Tracker/assets/108233306/c4c41691-ae5b-4fd9-8c05-6894f69a0a06)
-![Screenshot_2023-12-26-11-50-37-81_eb4585cfc68cc27f3e1715150b037bac](https://github.com/L10n42/Mood-Tracker/assets/108233306/b10e0be4-2593-47cd-b52f-1ff4f26e92e0)
-![Screenshot_2023-12-26-12-01-34-60_eb4585cfc68cc27f3e1715150b037bac](https://github.com/L10n42/Mood-Tracker/assets/108233306/e9bee628-bb2c-4a38-99f8-46eb7fe44de2)
+Track your daily mood effortlessly!
+
+### Screenshots
+
+<p float="left"; align="middle">
+  <img src="https://github.com/L10n42/Mood-Tracker/assets/108233306/e1211bfe-b78f-47dd-b693-af0eb6ff7e47" width="32%" />
+  <img src="https://github.com/L10n42/Mood-Tracker/assets/108233306/6918fb47-a570-4131-afc2-1b41305ee166" width="32%" />
+  <img src="https://github.com/L10n42/Mood-Tracker/assets/108233306/4149b7a3-35a8-41b4-8ad0-12e8aab85780" width="32%" />
+</p>
+
+<p float="left"; align="middle">
+  <img src="https://github.com/L10n42/Mood-Tracker/assets/108233306/0c96c0c9-e47f-42b2-b9be-045a80242a7f" width="32%" />
+  <img src="https://github.com/L10n42/Mood-Tracker/assets/108233306/ff8640e2-b5d8-42f5-96c4-12124c9b545a" width="32%" />
+  <img src="https://github.com/L10n42/Mood-Tracker/assets/108233306/afeb6498-489c-48e4-814b-79930f6c2c72" width="32%" />
+</p>
